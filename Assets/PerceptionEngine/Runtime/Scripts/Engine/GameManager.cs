@@ -9,7 +9,7 @@ namespace Perception.Engine
     /// </summary>
     public class GameManager : MonoBehaviour
     {
-
+        private List<PerceptionService> services = new List<PerceptionService>();
     }
 
 }
