@@ -6,6 +6,9 @@ using Object = UnityEngine.Object;
 
 namespace Perception.Engine
 {
+    /// <summary>
+    /// A class which gives us some nice formatted logging for our objects.
+    /// </summary>
     public static class PerceptionLogger
     {
         private static void DoLog(Action<string, Object> LogFunction, string prefix, Object obj, params object[] msg)

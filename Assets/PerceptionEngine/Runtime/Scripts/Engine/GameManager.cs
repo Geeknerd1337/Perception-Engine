@@ -41,10 +41,9 @@ namespace Perception.Engine
 
         public void InitializeServices()
         {
+            AddService<AssetService>();
             //Add the audio service
             AddService<AudioService>();
-
-            GetService<AudioService>().Test();
         }
 
 
