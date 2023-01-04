@@ -32,6 +32,12 @@ namespace Perception.Engine
 
         public void InitializeAssetLibrary()
         {
+            //Adding these paths for now so things can be a little more organized on the unity side. Should probably be another system.
+            Dictionary<ResourceType, string> paths = new Dictionary<ResourceType, string>();
+            paths.Add(ResourceType.Sound, "Perception/Audio/Sound");
+            paths.Add(ResourceType.AudioSource, "Perception/Audio/Audio Sources");
+            paths.Add(ResourceType.Entity, "Perception/Entity");
+
             //Iterate over the resourcetype enumerator
             foreach (ResourceType type in System.Enum.GetValues(typeof(ResourceType)))
             {
@@ -39,9 +45,10 @@ namespace Perception.Engine
                 Library.Add(type, new Dictionary<string, Object>());
 
                 //Get all the resources of this type
-                Object[] resources = Resources.LoadAll("Perception/" + type.ToString());
+                Object[] resources = Resources.LoadAll(paths[type]);
 
                 this.Log($"Loading {type.ToString()} Resources");
+
                 //Iterate over the resources and add them to the dictionary
                 foreach (Object resource in resources)
                 {
