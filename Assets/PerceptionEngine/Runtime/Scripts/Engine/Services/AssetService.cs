@@ -58,6 +58,11 @@ namespace Perception.Engine
             }
         }
 
+        /// <summary>
+        /// This is essentially just short hand for returning a sound object from the asset service. Cuts down on boilrer plate
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static SoundObject GetSound(string name)
         {
             //Try to get the sound from the library
