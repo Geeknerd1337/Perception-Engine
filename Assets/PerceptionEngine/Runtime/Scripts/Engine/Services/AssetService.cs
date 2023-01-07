@@ -57,6 +57,23 @@ namespace Perception.Engine
                 }
             }
         }
+
+        public static SoundObject GetSound(string name)
+        {
+            //Try to get the sound from the library
+            bool potentialSound = GameManager.GetService<AssetService>().Library[ResourceType.Sound].TryGetValue(name, out Object sound);
+
+            //If we couldn't find it, log an error and return null
+            if (!potentialSound)
+            {
+                GameManager.GetService<AssetService>().LogError($"Could not find sound {name}");
+                return null;
+            }
+            else
+            {
+                return (SoundObject)sound;
+            }
+        }
     }
 
     /// <summary>

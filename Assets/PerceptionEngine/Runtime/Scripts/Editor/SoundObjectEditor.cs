@@ -4,15 +4,15 @@ using UnityEngine;
 using UnityEditor;
 using Netscape.Engine;
 
-namespace Netscape.Editor
+namespace Perception.Editor
 {
-    [CustomEditor(typeof(Sound), true)]
-    public class SoundEditor : UnityEditor.Editor
+    [CustomEditor(typeof(SoundObject), true)]
+    public class SoundObjectEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            Sound sound = (Sound)target;
+            SoundObject sound = (SoundObject)target;
             if (GUILayout.Button("Play"))
             {
 
