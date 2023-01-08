@@ -4,10 +4,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 
-/// <summary>
-/// A class meant for the playing of audio in the game. 
-/// </summary>
-public class PerceptionAudio
+namespace Perception.Engine
 {
+    /// <summary>
+    /// A class meant for the playing of audio in the game. 
+    /// </summary>
+    public class PerceptionAudio
+    {
 
+    }
 }
