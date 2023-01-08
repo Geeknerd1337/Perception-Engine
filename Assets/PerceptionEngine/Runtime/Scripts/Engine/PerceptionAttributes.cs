@@ -15,6 +15,7 @@ namespace Perception.Engine
         }
     }
 
+    [AttributeUsage(AttributeTargets.Field)]
     public class MinMaxSliderAttribute : PropertyAttribute
     {
         public float Min;
@@ -25,6 +26,17 @@ namespace Perception.Engine
         {
             Min = min;
             Max = max;
+        }
+    }
+
+
+    [AttributeUsage(AttributeTargets.Method)]
+    public class ButtonAttribute : PropertyAttribute
+    {
+        public readonly string Name;
+        public ButtonAttribute(string n)
+        {
+            Name = n;
         }
     }
 }

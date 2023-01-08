@@ -32,8 +32,11 @@ namespace Perception.Engine
         [MinMaxSlider(0f, 1f)]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
-        [Tab("Pitch")]
-        public float WhatsUp;
+
+        public void Test()
+        {
+            Debug.Log("Test");
+        }
 
     }
 }
