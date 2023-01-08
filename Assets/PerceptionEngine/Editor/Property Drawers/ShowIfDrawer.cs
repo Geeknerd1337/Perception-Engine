@@ -23,7 +23,6 @@ namespace Perception.Editor
             }
             else
             {
-
                 EditorGUI.PropertyField(position, property, label, true);
             }
 
