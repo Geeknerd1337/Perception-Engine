@@ -9,6 +9,11 @@ using System;
 
 namespace Perception.Engine.Editor
 {
+    /// <summary>
+    /// This is being done here so we can do tabs in the inspector for our scriptable objects. Right now I'm doing this by creating a custom object called
+    /// PerceptionScriptableObject because I want to have as little collision as possible with whatever editor scripts you may write. However, in the future, I may change my mind on this.
+    /// TODO: This will probably end up being the basis for a full on custom inspector later down the line.
+    /// </summary>
     [CustomEditor(typeof(PerceptionScriptableObject), true)]
     public class PerceptionScriptableObjectEditor : UnityEditor.Editor
     {
