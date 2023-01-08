@@ -32,6 +32,12 @@ namespace Perception.Engine
         [MinMaxSlider(0f, 1f)]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
+
+        public bool UseSemitones;
+
+        [ShowIf("UseSemitones")]
+        public int AsWell;
+
         [Button("Play Test")]
         public void Test()
         {

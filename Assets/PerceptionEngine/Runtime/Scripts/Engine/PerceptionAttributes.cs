@@ -39,4 +39,18 @@ namespace Perception.Engine
             Name = n;
         }
     }
+
+
+    //ShowIf Attribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class ShowIfAttribute : PropertyAttribute
+    {
+        public readonly string ConditionalSourceField;
+
+
+        public ShowIfAttribute(string conditionalSourceField)
+        {
+            ConditionalSourceField = conditionalSourceField;
+        }
+    }
 }
