@@ -7,7 +7,7 @@ using Perception.Engine;
 namespace Perception.Engine.Editor
 {
     [CustomEditor(typeof(SoundObject), true)]
-    public class SoundObjectEditor : PerceptionScriptableObjectEditor
+    public class SoundObjectEditor : PerceptionEditor
     {
         public override void OnInspectorGUI()
         {

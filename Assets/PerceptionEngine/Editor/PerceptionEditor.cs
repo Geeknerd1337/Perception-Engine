@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Linq;
 using System;
 
+using Object = UnityEngine.Object;
+
 namespace Perception.Engine.Editor
 {
     /// <summary>
@@ -14,11 +16,11 @@ namespace Perception.Engine.Editor
     /// PerceptionScriptableObject because I want to have as little collision as possible with whatever editor scripts you may write. However, in the future, I may change my mind on this.
     /// TODO: This will probably end up being the basis for a full on custom inspector later down the line.
     /// </summary>
-    [CustomEditor(typeof(PerceptionScriptableObject), true)]
-    public class PerceptionScriptableObjectEditor : UnityEditor.Editor
+    [CustomEditor(typeof(Object), true)]
+    public class PerceptionEditor : UnityEditor.Editor
     {
         // <summary>Our Target</summary>
-        private PerceptionScriptableObject _myTarget;
+        private Object _myTarget;
 
         /// <summary>Serialized Object</summary>
         private SerializedObject _soTarget;
@@ -38,7 +40,7 @@ namespace Perception.Engine.Editor
         private void OnEnable()
         {
             //Get our target and cast it to a pickup
-            _myTarget = (PerceptionScriptableObject)target;
+            _myTarget = (Object)target;
             //Get te type
             Type t = target.GetType();
             //Extract the fields
