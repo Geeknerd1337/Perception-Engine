@@ -50,7 +50,6 @@ namespace Perception.Editor
             //Draw the label field, center the text
             EditorGUI.LabelField(leftLabelPosition, range.x.ToString("0.000"));
 
-
             //Do the same for the right hand side
             var rightLabelPosition = oldPosition;
             rightLabelPosition.x += oldPosition.width * (range.y - minMax.Min) / (minMax.Max - minMax.Min);
@@ -59,11 +58,8 @@ namespace Perception.Editor
             rightLabelPosition.x -= (float)stringWidth / 2f;
             EditorGUI.LabelField(rightLabelPosition, range.y.ToString("0.000"));
 
-
             //Set the value
             property.vector2Value = range;
-
-
 
         }
 
