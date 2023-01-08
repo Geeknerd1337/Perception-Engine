@@ -61,4 +61,18 @@ namespace Perception.Engine
             ConditionalSourceField = conditionalSourceField;
         }
     }
+
+    /// <summary>
+    /// Hides a field if the value of the field specified in the inspector is true.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class HideIfAttribute : PropertyAttribute
+    {
+        public readonly string ConditionalSourceField;
+        public HideIfAttribute(string conditionalSourceField)
+        {
+            ConditionalSourceField = conditionalSourceField;
+        }
+    }
+
 }
