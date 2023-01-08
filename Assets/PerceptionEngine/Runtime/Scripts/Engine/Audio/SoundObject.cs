@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 
 namespace Perception.Engine
 {
@@ -11,7 +13,7 @@ namespace Perception.Engine
     /// </summary>
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Sound", menuName = "Perception/Audio/New Sound")]
-    public class SoundObject : ScriptableObject
+    public class SoundObject : PerceptionScriptableObject
     {
         /// <summary>
         /// Semitones are a unit of measurement for pitch. This is the number of semitones that the pitch of the sound will be shifted by.
@@ -20,7 +22,9 @@ namespace Perception.Engine
         private static readonly float SEMITONES_TO_PITCH_CONVERSION_UNIT = 1.05946f;
 
 
+        public float Test;
 
 
     }
 }
+
