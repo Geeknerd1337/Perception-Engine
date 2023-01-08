@@ -114,8 +114,6 @@ namespace Perception.Engine.Editor
             //Check for changes
             EditorGUI.BeginChangeCheck();
 
-
-
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
@@ -129,7 +127,6 @@ namespace Perception.Engine.Editor
             //If we have tabs that aren't just the defulat tab.
             if (_tabs.Count > 1)
             {
-
                 //Draw the tool bar
                 _currentTab = GUILayout.Toolbar(_currentTab, _tabNames.ToArray());
                 EditorGUILayout.Space(10f);

@@ -17,7 +17,7 @@ namespace Perception.Engine.Editor
             EditorGUILayout.Space(10f);
             if (GUILayout.Button("Play"))
             {
-
+                Debug.Log(sound.Volume.x);
             }
         }
     }

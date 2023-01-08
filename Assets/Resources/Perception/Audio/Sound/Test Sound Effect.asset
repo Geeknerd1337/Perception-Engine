@@ -12,3 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4073fa6f2d0944ba66892f96e88878, type: 3}
   m_Name: Test Sound Effect
   m_EditorClassIdentifier: 
+  Clips: []
+  Volume: {x: 0.17476898, y: 0.59622335}
+  WhatsUp: 0

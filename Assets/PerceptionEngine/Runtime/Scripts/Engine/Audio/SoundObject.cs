@@ -21,9 +21,18 @@ namespace Perception.Engine
         /// </summary>
         private static readonly float SEMITONES_TO_PITCH_CONVERSION_UNIT = 1.05946f;
 
+        /// <summary>
+        /// The number of clips we want to use
+        /// </summary>
+        public AudioClip[] Clips;
 
-        public float Test;
+        /// <summary>
+        /// The random volume of the sound
+        /// </summary>
+        [MinMaxSlider(0f, 1f)]
+        public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
+        public float WhatsUp;
 
     }
 }
