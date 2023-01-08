@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using Perception.Engine;
 
-namespace Perception.Engine.Editor
+namespace Perception.Editor
 {
     [CustomEditor(typeof(SoundObject), true)]
     public class SoundObjectEditor : PerceptionEditor
