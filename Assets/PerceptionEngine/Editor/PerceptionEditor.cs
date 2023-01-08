@@ -12,11 +12,13 @@ using Object = UnityEngine.Object;
 namespace Perception.Engine.Editor
 {
     /// <summary>
-    /// This is being done here so we can do tabs in the inspector for our scriptable objects. Right now I'm doing this by creating a custom object called
-    /// PerceptionScriptableObject because I want to have as little collision as possible with whatever editor scripts you may write. However, in the future, I may change my mind on this.
-    /// TODO: This will probably end up being the basis for a full on custom inspector later down the line.
+    /// The perception engine is meant to work out of the box and offer developers a lot of nice tools in a single place for free. I deliberated over whether or not
+    /// to create a custom inspector as I originalyl did not want to cause collision with custom editor libraries like odin. However, I decided to go ahead with it as it is a very
+    /// useful tool and Odin costs money. If you do not want to use it, simply delete the editor folder. You will have a lot of messy attributes to clean up,
+    /// but I'm assuming if you don't need this stuff then you're not going to be using the attributes anyway.
     /// </summary>
     [CustomEditor(typeof(Object), true)]
+    [CanEditMultipleObjects]
     public class PerceptionEditor : UnityEditor.Editor
     {
         // <summary>Our Target</summary>
@@ -31,7 +33,9 @@ namespace Perception.Engine.Editor
         /// <summary>The Current Tab</summary>
         private int _currentTab;
 
-        /// <summary>List of our tabs</summary>
+        /// <summary>List of our tabs
+        /// TODO: Most of this should be moved to its own class eventually
+        /// </summary>
         private List<Tab> _tabs;
 
         /// <summary>List of tab names, used for tool bar</summary>
