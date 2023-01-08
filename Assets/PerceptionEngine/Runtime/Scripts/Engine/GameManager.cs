@@ -39,6 +39,12 @@ namespace Perception.Engine
 
         }
 
+        [Button("Test")]
+        public void Test()
+        {
+
+        }
+
         public void InitializeServices()
         {
             AddService<AssetService>();

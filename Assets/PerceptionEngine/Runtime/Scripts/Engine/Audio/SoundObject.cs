@@ -32,7 +32,7 @@ namespace Perception.Engine
         [MinMaxSlider(0f, 1f)]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
-
+        [Button("Play Test")]
         public void Test()
         {
             Debug.Log("Test");
