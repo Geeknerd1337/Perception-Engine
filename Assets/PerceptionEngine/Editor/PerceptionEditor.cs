@@ -24,7 +24,7 @@ namespace Perception.Editor
         /// <summary>Serialized Object</summary>
         private SerializedObject _soTarget;
 
-        /// <summary>The Fields for our given object</summary>
+        /// <summary>The Fields for our given objects</summary>
         FieldInfo[] Fields;
 
         /// <summary>The Current InspectorTab</summary>
@@ -117,16 +117,13 @@ namespace Perception.Editor
         public override void OnInspectorGUI()
         {
 
-            //Check for changes
+            //Check for changes, I don't remember why I do this twice, but it works so I'm not touching it.
             EditorGUI.BeginChangeCheck();
-
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
                 GUI.FocusControl(null);
             }
-
-
             EditorGUI.BeginChangeCheck();
 
 
