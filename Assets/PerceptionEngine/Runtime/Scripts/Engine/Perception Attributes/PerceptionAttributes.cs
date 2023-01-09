@@ -22,22 +22,7 @@ namespace Perception.Engine
         }
     }
 
-    /// <summary>
-    /// Used for Vector2s to show a min max slider in the inspector.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class MinMaxSliderAttribute : PropertyAttribute
-    {
-        public float Min;
-        public float Max;
 
-
-        public MinMaxSliderAttribute(float min, float max)
-        {
-            Min = min;
-            Max = max;
-        }
-    }
 
     public enum ButtonMode
     {
