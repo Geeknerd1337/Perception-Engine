@@ -51,11 +51,11 @@ namespace Perception.Editor
 
             if (parameters.Length == 0)
             {
-                return null;//new ButtonWithoutParams(method, buttonAttribute);
+                return new EditorButtonWithoutParams(method, buttonAttribute);
             }
             else
             {
-                return null;//new ButtonWithParams(method, buttonAttribute, parameters);
+                return new EditorButtonWithParams(method, buttonAttribute, parameters);
             }
         }
 
