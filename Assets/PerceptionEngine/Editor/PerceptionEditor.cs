@@ -206,7 +206,10 @@ namespace Perception.Editor
                         {
 
                             MethodInfo method = property.serializedObject.targetObject.GetType().GetMethod(onEditorValueChangedAttribute.CallbackName);
-                            method.Invoke(property.serializedObject.targetObject, null);
+                            if (method != null)
+                            {
+                                method.Invoke(property.serializedObject.targetObject, null);
+                            }
                         }
                     }
 

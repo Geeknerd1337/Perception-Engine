@@ -30,7 +30,6 @@ namespace Perception.Engine
         /// The random volume of the sound
         /// </summary>
         [MinMaxSlider(0f, 1f)]
-        [OnEditorValueChanged("OtherTest")]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
 
