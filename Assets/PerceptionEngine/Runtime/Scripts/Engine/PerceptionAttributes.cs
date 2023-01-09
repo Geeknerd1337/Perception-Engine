@@ -72,6 +72,11 @@ namespace Perception.Engine
         /// Whether or not the button has some space before or after it.
         /// </summary>
         public ButtonSpacing Spacing { get; set; } = ButtonSpacing.None;
+
+        /// <summary>
+        /// Whether or not to expand the paramters foldout by default.
+        /// </summary>
+        public bool Expanded { get; set; }
     }
 
 
