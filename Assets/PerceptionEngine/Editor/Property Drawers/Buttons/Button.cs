@@ -8,8 +8,8 @@ namespace Perception.Editor
 {
     /// <summary>
     /// This is the core class for how buttons get drawn in the PerceptionEditor. 
-    /// This is partially based an MIT licensed repository I thought did this concept incredibly well, so I'm basing the architecture of this on that.
-    /// You can see the code this is inspired by here:
+    /// Found a repository that did basic editor buttons very well so some concepts and architecture have been borrowed from that.
+    /// You can see that repository here (MIT License):
     /// https://github.com/madsbangh/EasyButtons
     /// </summary>
     public abstract class Button
@@ -32,6 +32,10 @@ namespace Perception.Editor
             DisplayName = string.IsNullOrEmpty(attribute.Name)
                 ? ObjectNames.NicifyVariableName(method.Name)
                 : attribute.Name;
+
+            bool inAppropriateMode = EditorApplication.isPlaying
+                ? attribute.Mode == ButtonMode.EnabledInPlayMode
+                : attribute.Mode == ButtonMode.DisabledInPlayMode;
         }
     }
 }

@@ -35,15 +35,43 @@ namespace Perception.Engine
         }
     }
 
+    public enum ButtonMode
+    {
+        AlwaysEnabled,
+        EnabledInPlayMode,
+        DisabledInPlayMode
+    }
 
-    [AttributeUsage(AttributeTargets.Method)]
+    [Flags]
+    public enum ButtonSpacing
+    {
+        None = 0,
+        Before = 1,
+        After = 2
+    }
+
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class ButtonAttribute : PropertyAttribute
     {
         public readonly string Name;
+
+        public ButtonAttribute() { }
+
         public ButtonAttribute(string n)
         {
             Name = n;
         }
+
+        /// <summary>
+        /// The enable behavior of the button. Always enabled by default.
+        /// </summary>
+        public ButtonMode Mode { get; set; } = ButtonMode.AlwaysEnabled;
+
+        /// <summary>
+        /// Whether or not the button has some space before or after it.
+        /// </summary>
+        public ButtonSpacing Spacing { get; set; } = ButtonSpacing.None;
     }
 
 
