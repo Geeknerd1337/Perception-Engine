@@ -13,7 +13,7 @@ namespace Perception.Engine
     /// </summary>
     [System.Serializable]
     [CreateAssetMenu(fileName = "New Sound", menuName = "Perception/Audio/New Sound")]
-    public class SoundObject : PerceptionScriptableObject
+    public class SoundObject : ScriptableObject
     {
         /// <summary>
         /// Semitones are a unit of measurement for pitch. This is the number of semitones that the pitch of the sound will be shifted by.

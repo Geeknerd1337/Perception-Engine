@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Test Sound Effect
   m_EditorClassIdentifier: 
   Clips: []
-  Volume: {x: 0, y: 0.18329686}
+  Volume: {x: 0.21686466, y: 0.68393123}
   UseSemitones: 1
   AsWell: 0
