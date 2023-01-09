@@ -2,6 +2,7 @@
 using System.Reflection;
 using UnityEditor;
 using System.Collections.Generic;
+using Perception.Engine;
 
 namespace Perception.Editor
 {
@@ -22,5 +23,15 @@ namespace Perception.Editor
         /// The method to be invoked when the button is pressed.
         /// </summary>
         public readonly MethodInfo Method;
+
+        protected Button(MethodInfo method, ButtonAttribute attribute)
+        {
+            Method = method;
+
+            //If we don't provide a name just name it the name of the method.
+            DisplayName = string.IsNullOrEmpty(attribute.Name)
+                ? ObjectNames.NicifyVariableName(method.Name)
+                : attribute.Name;
+        }
     }
 }
