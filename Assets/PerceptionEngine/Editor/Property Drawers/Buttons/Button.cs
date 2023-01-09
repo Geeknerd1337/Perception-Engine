@@ -1,8 +1,8 @@
-
 using System.Reflection;
 using UnityEditor;
 using System.Collections.Generic;
 using Perception.Engine;
+using Perception.Editor.Utility;
 
 namespace Perception.Editor
 {
@@ -12,7 +12,7 @@ namespace Perception.Editor
     /// You can see that repository here (MIT License):
     /// https://github.com/madsbangh/EasyButtons
     /// </summary>
-    public abstract class Button
+    public abstract class EditorButton
     {
         /// <summary>
         /// The display name of the button.
@@ -27,7 +27,7 @@ namespace Perception.Editor
         private readonly bool _disabled;
         private readonly ButtonSpacing _spacing;
 
-        protected Button(MethodInfo method, ButtonAttribute attribute)
+        protected EditorButton(MethodInfo method, ButtonAttribute attribute)
         {
             Method = method;
 
@@ -43,6 +43,33 @@ namespace Perception.Editor
             _spacing = attribute.Spacing;
 
             _disabled = attribute.Mode == ButtonMode.AlwaysEnabled || inAppropriateMode;
+        }
+
+        internal static EditorButton Create(MethodInfo method, ButtonAttribute buttonAttribute)
+        {
+            var parameters = method.GetParameters();
+
+            if (parameters.Length == 0)
+            {
+                return null;//new ButtonWithoutParams(method, buttonAttribute);
+            }
+            else
+            {
+                return null;//new ButtonWithParams(method, buttonAttribute, parameters);
+            }
+        }
+
+        public void Draw(IEnumerable<object> targets)
+        {
+            using (new EditorGUI.DisabledScope(_disabled))
+            {
+                using (new EditorDrawUtility.VerticalIndent(
+                    _spacing.HasFlag(ButtonSpacing.Before),
+                    _spacing.HasFlag(ButtonSpacing.After)))
+                {
+                    DrawInternal(targets);
+                }
+            }
         }
 
 
