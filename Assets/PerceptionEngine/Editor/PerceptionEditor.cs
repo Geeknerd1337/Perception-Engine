@@ -21,9 +21,6 @@ namespace Perception.Editor
     [CanEditMultipleObjects]
     public class PerceptionEditor : UnityEditor.Editor
     {
-        // <summary>Our Target</summary>
-        private Object _myTarget;
-
         /// <summary>Serialized Object</summary>
         private SerializedObject _soTarget;
 
@@ -43,15 +40,13 @@ namespace Perception.Editor
 
         private void OnEnable()
         {
-            //Get our target and cast it to a pickup
-            _myTarget = (Object)target;
             //Get te type
             Type t = target.GetType();
             //Extract the fields
             Fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public);
 
             //Set the serializedo bject
-            _soTarget = new SerializedObject(_myTarget);
+            _soTarget = new SerializedObject(targets);
 
             //Create the list of InspectorTabs and InspectorTab names
             _InspectorTabNames = new List<string>();
