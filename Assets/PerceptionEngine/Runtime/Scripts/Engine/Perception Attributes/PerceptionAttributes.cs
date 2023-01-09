@@ -69,33 +69,8 @@ namespace Perception.Engine
     }
 
 
-    /// <summary>
-    /// Shows a field only if the value of the field specified in the inspector is true.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class ShowIfAttribute : PropertyAttribute
-    {
-        public readonly string ConditionalSourceField;
 
 
-        public ShowIfAttribute(string conditionalSourceField)
-        {
-            ConditionalSourceField = conditionalSourceField;
-        }
-    }
-
-    /// <summary>
-    /// Hides a field if the value of the field specified in the inspector is true.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
-    public class HideIfAttribute : PropertyAttribute
-    {
-        public readonly string ConditionalSourceField;
-        public HideIfAttribute(string conditionalSourceField)
-        {
-            ConditionalSourceField = conditionalSourceField;
-        }
-    }
 
     /// <summary>
     /// An attribute you apply to call a method on a class when the value changes in the inspector.
@@ -112,6 +87,9 @@ namespace Perception.Engine
     }
 
     #region Modifiable Attributes
+    /// <summary>
+    /// An attribute which modifies attributes inheriting from ModifiablePropertyAttribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
     public abstract class PropertyModifierAttribute : Attribute
     {
@@ -129,6 +107,9 @@ namespace Perception.Engine
 #endif
     }
 
+    /// <summary>
+    /// An attribute which can be modified by attributes inheriting from PropertyModifierAttribute.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
     public class ModifiablePropertyAttribute : PropertyAttribute
     {

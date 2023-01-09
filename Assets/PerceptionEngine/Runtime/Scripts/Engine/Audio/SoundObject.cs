@@ -35,9 +35,10 @@ namespace Perception.Engine
 
         public bool UseSemitones;
 
-
+        [HideIf("UseSemitones")]
         [MinMaxSlider(-10, 10)]
         public Vector2Int Semitones = new Vector2Int(0, 0);
+
 
     }
 }
