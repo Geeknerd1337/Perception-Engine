@@ -108,4 +108,16 @@ namespace Perception.Engine
         }
     }
 
+    //On Value Changed Attribute
+    [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
+    public class OnEditorValueChangedAttribute : PropertyAttribute
+    {
+        public readonly string CallbackName;
+
+        public OnEditorValueChangedAttribute(string callbackName)
+        {
+            CallbackName = callbackName;
+        }
+    }
+
 }

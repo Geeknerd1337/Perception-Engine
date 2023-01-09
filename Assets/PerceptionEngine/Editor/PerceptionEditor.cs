@@ -117,8 +117,11 @@ namespace Perception.Editor
                     }
                 }
             }
-
         }
+
+
+
+
 
         public override void OnInspectorGUI()
         {
@@ -132,30 +135,94 @@ namespace Perception.Editor
             }
             EditorGUI.BeginChangeCheck();
 
-
             //If we have InspectorTabs that aren't just the defulat InspectorTab.
             if (_InspectorTabs.Count > 1)
             {
+
+
                 //Draw the tool bar
                 _currentInspectorTab = GUILayout.Toolbar(_currentInspectorTab, _InspectorTabNames.ToArray());
+
+
+                //Draw the m_Script property on the default InspectorTab, disable it
+                if (_currentInspectorTab == 0)
+                {
+                    EditorGUI.BeginDisabledGroup(true);
+                    EditorGUILayout.PropertyField(_soTarget.FindProperty("m_Script"));
+
+                    EditorGUI.EndDisabledGroup();
+                }
+
                 EditorGUILayout.Space(10f);
 
                 //Draw each property field
                 InspectorTab current = _InspectorTabs[_currentInspectorTab];
                 foreach (SerializedProperty field in current.Fields)
                 {
-
+                    EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(field);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        //Check to see if the field has OnEditorValueChanged attribute
+                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
+
+                        //If it does, call the method
+                        if (onEditorValueChangedAttribute != null)
+                        {
+
+                            MethodInfo method = field.serializedObject.targetObject.GetType().GetMethod(onEditorValueChangedAttribute.CallbackName);
+                            method.Invoke(field.serializedObject.targetObject, null);
+                        }
+                    }
+
                 }
             }
             else
             {
-                //Other wise just draw the fields as usual
-                DrawDefaultInspector();
+                // This mimics the behavior of DrawDefaultInspector so you don't see the default tab if there are no tabs
+                // Get the serialized properties for the target object
+                SerializedProperty property = _soTarget.GetIterator();
+
+                // Iterate through all properties and draw them
+                bool enterChildren = true;
+                while (property.NextVisible(enterChildren))
+                {
+                    //Disable the m_Script property
+                    if (property.name == "m_Script")
+                    {
+                        EditorGUI.BeginDisabledGroup(true);
+                    }
+                    enterChildren = false;
+
+                    EditorGUI.BeginChangeCheck();
+                    EditorGUILayout.PropertyField(property, true);
+                    if (EditorGUI.EndChangeCheck())
+                    {
+                        //Check to see if the field has OnEditorValueChanged attribute
+                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(property.serializedObject.targetObject.GetType().GetField(property.name), typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
+
+                        //If it does, call the method
+                        if (onEditorValueChangedAttribute != null)
+                        {
+
+                            MethodInfo method = property.serializedObject.targetObject.GetType().GetMethod(onEditorValueChangedAttribute.CallbackName);
+                            method.Invoke(property.serializedObject.targetObject, null);
+                        }
+                    }
+
+
+                    if (property.name == "m_Script")
+                    {
+                        EditorGUI.EndDisabledGroup();
+                    }
+                }
+
             }
 
             //Draw the buttons
             _buttonsDrawer.DrawButtons(targets);
+
+
 
             if (EditorGUI.EndChangeCheck())
             {

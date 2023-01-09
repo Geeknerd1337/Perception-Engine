@@ -30,19 +30,15 @@ namespace Perception.Engine
         /// The random volume of the sound
         /// </summary>
         [MinMaxSlider(0f, 1f)]
+        [OnEditorValueChanged("OtherTest")]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
 
         public bool UseSemitones;
 
         [ShowIf("UseSemitones")]
-        public int AsWell;
-
-        [Button("Play Test")]
-        public void Test()
-        {
-            Debug.Log("Test");
-        }
+        [MinMaxSlider(-10, 10)]
+        public Vector2Int Semitones = new Vector2Int(0, 0);
 
     }
 }
