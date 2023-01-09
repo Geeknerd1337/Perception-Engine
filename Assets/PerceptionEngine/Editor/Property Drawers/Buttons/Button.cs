@@ -24,6 +24,9 @@ namespace Perception.Editor
         /// </summary>
         public readonly MethodInfo Method;
 
+        private readonly bool _disabled;
+        private readonly ButtonSpacing _spacing;
+
         protected Button(MethodInfo method, ButtonAttribute attribute)
         {
             Method = method;
@@ -36,6 +39,14 @@ namespace Perception.Editor
             bool inAppropriateMode = EditorApplication.isPlaying
                 ? attribute.Mode == ButtonMode.EnabledInPlayMode
                 : attribute.Mode == ButtonMode.DisabledInPlayMode;
+
+            _spacing = attribute.Spacing;
+
+            _disabled = attribute.Mode == ButtonMode.AlwaysEnabled || inAppropriateMode;
         }
+
+
+
+        protected abstract void DrawInternal(IEnumerable<object> targets);
     }
 }
