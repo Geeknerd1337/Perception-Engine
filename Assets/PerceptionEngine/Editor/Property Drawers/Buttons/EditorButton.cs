@@ -42,7 +42,7 @@ namespace Perception.Editor
 
             _spacing = attribute.Spacing;
 
-            _disabled = attribute.Mode == ButtonMode.AlwaysEnabled || inAppropriateMode;
+            _disabled = !(attribute.Mode == ButtonMode.AlwaysEnabled) || inAppropriateMode;
         }
 
         internal static EditorButton Create(MethodInfo method, ButtonAttribute buttonAttribute)

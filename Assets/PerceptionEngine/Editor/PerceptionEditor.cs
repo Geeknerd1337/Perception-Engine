@@ -38,6 +38,10 @@ namespace Perception.Editor
         /// <summary>List of InspectorTab names, used for tool bar</summary>
         private List<string> _InspectorTabNames;
 
+
+        private ButtonsDrawer _buttonsDrawer;
+
+
         private void OnEnable()
         {
             //Get te type
@@ -58,6 +62,8 @@ namespace Perception.Editor
 
             //Initialze the InspectorTabs
             InitializeInspectorTabs(Fields);
+
+            _buttonsDrawer = new ButtonsDrawer(target);
         }
 
         /// <summary>Initializes the InspectorTabs and gives them their relevant attributes</summary>
@@ -147,6 +153,9 @@ namespace Perception.Editor
                 //Other wise just draw the fields as usual
                 DrawDefaultInspector();
             }
+
+            //Draw the buttons
+            _buttonsDrawer.DrawButtons(targets);
 
             if (EditorGUI.EndChangeCheck())
             {

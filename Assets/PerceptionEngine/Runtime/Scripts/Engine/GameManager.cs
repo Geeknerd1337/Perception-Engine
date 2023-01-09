@@ -42,7 +42,7 @@ namespace Perception.Engine
         [Button("Test")]
         public void Test()
         {
-
+            Debug.Log("HELLO");
         }
 
 
