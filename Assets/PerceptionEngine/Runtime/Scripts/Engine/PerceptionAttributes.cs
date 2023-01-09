@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Perception.Engine
 {
     /// <summary>
@@ -108,7 +112,9 @@ namespace Perception.Engine
         }
     }
 
-    //On Value Changed Attribute
+    /// <summary>
+    /// An attribute you apply to call a method on a class when the value changes in the inspector.
+    /// </summary>
     [AttributeUsage(AttributeTargets.Field, AllowMultiple = true)]
     public class OnEditorValueChangedAttribute : PropertyAttribute
     {
@@ -119,5 +125,43 @@ namespace Perception.Engine
             CallbackName = callbackName;
         }
     }
+
+    #region Modifiable Attributes
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = true)]
+    public abstract class PropertyModifierAttribute : Attribute
+    {
+
+        public int order { get; set; }
+
+#if UNITY_EDITOR
+        public virtual float GetHeight(SerializedProperty property, GUIContent label, float height)
+        {
+            return height;
+        }
+
+        public virtual bool BeforeGUI(ref Rect position, SerializedProperty property, GUIContent label, bool visible) { return true; }
+        public virtual void AfterGUI(Rect position, SerializedProperty property, GUIContent label) { }
+#endif
+    }
+
+    [AttributeUsage(AttributeTargets.Field, Inherited = true, AllowMultiple = false)]
+    public class ModifiablePropertyAttribute : PropertyAttribute
+    {
+        public List<PropertyModifierAttribute> modifiers = null;
+
+#if UNITY_EDITOR
+        public virtual void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            EditorGUI.PropertyField(position, property, label);
+        }
+
+        public virtual float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUI.GetPropertyHeight(property, label);
+        }
+#endif
+    }
+
+    #endregion
 
 }
