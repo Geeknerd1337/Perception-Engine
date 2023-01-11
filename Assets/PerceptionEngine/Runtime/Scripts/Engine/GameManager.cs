@@ -46,15 +46,18 @@ namespace Perception.Engine
         public void InitializeServices()
         {
             AddService<AssetService>();
-            //Add the audio service
             AddService<AudioService>();
+            AddService<CameraService>();
         }
 
 
         public void AddService<T>() where T : PerceptionService
         {
             //Create a new game object called "NameOfService Service"
-            GameObject serviceObject = new GameObject(typeof(T).Name + " Service");
+            //Remove Service from the type name
+            string serviceName = typeof(T).Name;
+            serviceName = serviceName.Substring(0, serviceName.Length - "Service".Length);
+            GameObject serviceObject = new GameObject(serviceName + " Service");
 
             //Add the given component
             var service = serviceObject.AddComponent(typeof(T));

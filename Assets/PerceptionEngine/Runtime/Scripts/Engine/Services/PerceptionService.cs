@@ -15,6 +15,11 @@ namespace Perception.Engine
 
         }
 
+        public virtual void LateUpdate()
+        {
+
+        }
+
 
     }
 }

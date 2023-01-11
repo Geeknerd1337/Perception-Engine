@@ -6,8 +6,7 @@ using UnityEngine;
 namespace Perception.Engine
 {
     /// <summary>
-    /// A way of maintaining singleton camera reference which is controlled by a tripod. 
-    /// Essentially a port from Espionage.Engine which uses Unity's standard game loop instead of a custom built one
+    /// The way the camera actually gets modified by code in the game. Used as a base for controlling cameras in the game.
     /// </summary>
     public class Tripod : MonoBehaviour
     {
