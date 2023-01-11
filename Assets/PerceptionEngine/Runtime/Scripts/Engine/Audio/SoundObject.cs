@@ -54,8 +54,8 @@ namespace Perception.Engine
         public bool Loops = false;
         public SoundRollOffMode RollOffMode = SoundRollOffMode.Linear;
         public float MaxDistance = 500f;
+        [Range(0, 128)]
         public int Priority = 0;
-
         private int _playIndex;
 
 

@@ -61,8 +61,6 @@ namespace Perception.Engine
         /// <summary>
         /// This is essentially just short hand for returning a sound object from the asset service. Cuts down on boilrer plate
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public static SoundObject GetSound(string name)
         {
             //Try to get the sound from the library
@@ -77,6 +75,26 @@ namespace Perception.Engine
             else
             {
                 return (SoundObject)sound;
+            }
+        }
+
+        /// <summary>
+        ///  This is essentially just short hand for returning an AudioSource from the asset service. Cuts down on boilrer plate
+        /// </summary>
+        public static AudioSource GetAudioSource(string name)
+        {
+            //Try to get the sound from the library
+            bool potentialSource = GameManager.GetService<AssetService>().Library[ResourceType.AudioSource].TryGetValue(name, out Object source);
+
+            //If we couldn't find it, log an error and return null
+            if (!potentialSource)
+            {
+                GameManager.GetService<AssetService>().LogError($"Could not find audio source {name}");
+                return null;
+            }
+            else
+            {
+                return (AudioSource)source;
             }
         }
     }
