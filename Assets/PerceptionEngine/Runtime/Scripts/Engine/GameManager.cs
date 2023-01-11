@@ -13,6 +13,7 @@ namespace Perception.Engine
         /// A list of our services.
         /// TODO: This should probably be its own class which manages this list itself. However I am trying to avoid having to do GameManager.Instance.Services.GetService as opposed to just GameManager.GetService
         /// </summary>
+
         private List<PerceptionService> services = new List<PerceptionService>();
 
         public static GameManager Instance { get; private set; }
@@ -25,6 +26,8 @@ namespace Perception.Engine
             {
                 //Set to not be destroyed on load
                 DontDestroyOnLoad(this.gameObject);
+
+                Instance = this;
 
                 //Initialize the services
                 InitializeServices();
@@ -65,6 +68,7 @@ namespace Perception.Engine
 
         public static T GetService<T>() where T : PerceptionService
         {
+
             //Loop through all of the services
             foreach (var service in GameManager.Instance.services)
             {
