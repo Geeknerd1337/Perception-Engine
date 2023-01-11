@@ -126,24 +126,30 @@ namespace Perception.Editor
         public override void OnInspectorGUI()
         {
 
+            EditorGUI.BeginChangeCheck();
+            if (EditorGUI.EndChangeCheck())
+            {
+                _soTarget.ApplyModifiedProperties();
+                GUI.FocusControl(null);
+            }
+
+
+            EditorGUI.BeginChangeCheck();
+            //Draw the tool bar
 
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
                 GUI.FocusControl(null);
             }
-            EditorGUI.BeginChangeCheck();
 
             //If we have InspectorTabs that aren't just the defulat InspectorTab.
             if (_InspectorTabs.Count > 1)
             {
-
-
-                //Draw the tool bar
                 _currentInspectorTab = GUILayout.Toolbar(_currentInspectorTab, _InspectorTabNames.ToArray());
+                //Draw each property field
+                InspectorTab current = _InspectorTabs[_currentInspectorTab];
 
-
-                //Draw the m_Script property on the default InspectorTab, disable it
                 if (_currentInspectorTab == 0)
                 {
                     EditorGUI.BeginDisabledGroup(true);
@@ -152,22 +158,16 @@ namespace Perception.Editor
                     EditorGUI.EndDisabledGroup();
                 }
 
-                EditorGUILayout.Space(10f);
-
-                //Draw each property field
-                InspectorTab current = _InspectorTabs[_currentInspectorTab];
                 EditorGUI.BeginChangeCheck();
+
                 foreach (SerializedProperty field in current.Fields)
                 {
-
                     EditorGUILayout.PropertyField(field);
-
-
                 }
                 //TODO: This really sucks and has no place here, but is the only way I could get oneditorvalue changed to work
                 if (EditorGUI.EndChangeCheck())
                 {
-                    //Loop over each field in _soTarget and check to see if it has the OnEditorValueChanged attribute
+                    // Loop over each field in _soTarget and check to see if it has the OnEditorValueChanged attribute
                     for (int i = 0; i < _soTarget.targetObject.GetType().GetFields().Length; i++)
                     {
                         //Get the field
@@ -246,7 +246,6 @@ namespace Perception.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
-                GUI.FocusControl(null);
             }
 
         }
