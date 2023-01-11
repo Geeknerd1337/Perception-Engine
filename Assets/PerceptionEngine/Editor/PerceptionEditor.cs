@@ -126,8 +126,7 @@ namespace Perception.Editor
         public override void OnInspectorGUI()
         {
 
-            //Check for changes, I don't remember why I do this twice, but it works so I'm not touching it.
-            EditorGUI.BeginChangeCheck();
+
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
@@ -157,21 +156,33 @@ namespace Perception.Editor
 
                 //Draw each property field
                 InspectorTab current = _InspectorTabs[_currentInspectorTab];
+                EditorGUI.BeginChangeCheck();
                 foreach (SerializedProperty field in current.Fields)
                 {
-                    EditorGUI.BeginChangeCheck();
+
                     EditorGUILayout.PropertyField(field);
-                    if (EditorGUI.EndChangeCheck())
+
+
+                }
+                //TODO: This really sucks and has no place here, but is the only way I could get oneditorvalue changed to work
+                if (EditorGUI.EndChangeCheck())
+                {
+                    //Loop over each field in _soTarget and check to see if it has the OnEditorValueChanged attribute
+                    for (int i = 0; i < _soTarget.targetObject.GetType().GetFields().Length; i++)
                     {
-                        //Check to see if the field has OnEditorValueChanged attribute
-                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
+                        //Get the field
+                        FieldInfo field = _soTarget.targetObject.GetType().GetFields()[i];
+
+                        //Get the OnEditorValueChanged attribute
+                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(field, typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
 
                         //If it does, call the method
                         if (onEditorValueChangedAttribute != null)
                         {
-
-                            MethodInfo method = field.serializedObject.targetObject.GetType().GetMethod(onEditorValueChangedAttribute.CallbackName);
-                            method.Invoke(field.serializedObject.targetObject, null);
+                            MethodInfo method = field.DeclaringType.GetMethod(onEditorValueChangedAttribute.CallbackName);
+                            method.Invoke(_soTarget.targetObject, null);
+                            _soTarget.ApplyModifiedProperties();
+                            _soTarget.UpdateIfRequiredOrScript();
                         }
                     }
 
@@ -182,6 +193,7 @@ namespace Perception.Editor
                 // This mimics the behavior of DrawDefaultInspector so you don't see the default tab if there are no tabs
                 // Get the serialized properties for the target object
                 SerializedProperty property = _soTarget.GetIterator();
+                EditorGUI.BeginChangeCheck();
 
                 // Iterate through all properties and draw them
                 bool enterChildren = true;
@@ -193,31 +205,35 @@ namespace Perception.Editor
                         EditorGUI.BeginDisabledGroup(true);
                     }
                     enterChildren = false;
-
-                    EditorGUI.BeginChangeCheck();
                     EditorGUILayout.PropertyField(property, true);
-                    if (EditorGUI.EndChangeCheck())
-                    {
-                        //Check to see if the field has OnEditorValueChanged attribute
-                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(property.serializedObject.targetObject.GetType().GetField(property.name), typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
-
-                        //If it does, call the method
-                        if (onEditorValueChangedAttribute != null)
-                        {
-
-                            MethodInfo method = property.serializedObject.targetObject.GetType().GetMethod(onEditorValueChangedAttribute.CallbackName);
-                            if (method != null)
-                            {
-                                method.Invoke(property.serializedObject.targetObject, null);
-                            }
-                        }
-                    }
-
-
                     if (property.name == "m_Script")
                     {
                         EditorGUI.EndDisabledGroup();
                     }
+                }
+                //TODO: This really sucks and has no place here, but is the only way I could get oneditorvalue changed to work, this whole module is going to need
+                //a proper re-write at some point
+                if (EditorGUI.EndChangeCheck())
+                {
+                    //Loop over each field in _soTarget and check to see if it has the OnEditorValueChanged attribute
+                    for (int i = 0; i < _soTarget.targetObject.GetType().GetFields().Length; i++)
+                    {
+                        //Get the field
+                        FieldInfo field = _soTarget.targetObject.GetType().GetFields()[i];
+
+                        //Get the OnEditorValueChanged attribute
+                        OnEditorValueChangedAttribute onEditorValueChangedAttribute = Attribute.GetCustomAttribute(field, typeof(OnEditorValueChangedAttribute)) as OnEditorValueChangedAttribute;
+
+                        //If it does, call the method
+                        if (onEditorValueChangedAttribute != null)
+                        {
+                            MethodInfo method = field.DeclaringType.GetMethod(onEditorValueChangedAttribute.CallbackName);
+                            method.Invoke(_soTarget.targetObject, null);
+                            _soTarget.ApplyModifiedProperties();
+                            _soTarget.UpdateIfRequiredOrScript();
+                        }
+                    }
+
                 }
 
             }
@@ -230,6 +246,7 @@ namespace Perception.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 _soTarget.ApplyModifiedProperties();
+                GUI.FocusControl(null);
             }
 
         }

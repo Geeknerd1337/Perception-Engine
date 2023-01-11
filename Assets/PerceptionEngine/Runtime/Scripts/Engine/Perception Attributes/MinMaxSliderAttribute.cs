@@ -42,8 +42,6 @@ namespace Perception.Engine
         }
         public void DrawIntSlider(Rect position, SerializedProperty property, GUIContent label)
         {
-
-
             Vector2Int intRange = property.vector2IntValue;
             Vector2 range = new Vector2(intRange.x, intRange.y);
 

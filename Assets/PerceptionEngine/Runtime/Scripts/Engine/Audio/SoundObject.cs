@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 
 namespace Perception.Engine
@@ -32,14 +35,80 @@ namespace Perception.Engine
         [MinMaxSlider(0f, 1f)]
         public Vector2 Volume = new Vector2(0.5f, 0.5f);
 
-
         public bool UseSemitones;
 
-        [HideIf("UseSemitones")]
+        [ShowIf("UseSemitones")]
         [MinMaxSlider(-10, 10)]
+        [OnEditorValueChanged("SyncPitchAndSemitones")]
         public Vector2Int Semitones = new Vector2Int(0, 0);
 
+        [HideIf("UseSemitones")]
+        [MinMaxSlider(0, 3)]
+        [OnEditorValueChanged("SyncPitchAndSemitones")]
+        public Vector2 Pitch = new Vector2(1, 1);
 
+        [SerializeField]
+        private SoundClipPlayOrder _playOrder;
+
+        public bool Loops = false;
+        public float MaxDistance = 500f;
+        public int Priority = 0;
+
+        private int _playIndex;
+
+        public float f;
+
+
+#if UNITY_EDITOR
+        private AudioSource _previewer;
+
+        private void OnEnable()
+        {
+            _previewer = EditorUtility
+                .CreateGameObjectWithHideFlags("AudioPreview", HideFlags.HideAndDontSave, typeof(AudioSource))
+                .GetComponent<AudioSource>();
+        }
+
+        private void OnDisable()
+        {
+            DestroyImmediate(_previewer.gameObject);
+        }
+
+#endif
+
+        public void SyncPitchAndSemitones()
+        {
+
+            if (UseSemitones)
+            {
+                Pitch.x = Mathf.Pow(SEMITONES_TO_PITCH_CONVERSION_UNIT, Semitones.x);
+                Pitch.y = Mathf.Pow(SEMITONES_TO_PITCH_CONVERSION_UNIT, Semitones.y);
+
+            }
+            else
+            {
+                Semitones.x = Mathf.RoundToInt(Mathf.Log10(Pitch.x) / Mathf.Log10(SEMITONES_TO_PITCH_CONVERSION_UNIT));
+                Semitones.y = Mathf.RoundToInt(Mathf.Log10(Pitch.y) / Mathf.Log10(SEMITONES_TO_PITCH_CONVERSION_UNIT));
+
+            }
+
+
+        }
+
+        enum SoundClipPlayOrder
+        {
+            Random,
+            In_order,
+            Reverse
+        }
+
+
+    }
+
+    public enum SoundRollOffMode
+    {
+        Linear = 0,
+        Logarithmic = 1,
     }
 }
 
