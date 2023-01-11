@@ -94,7 +94,7 @@ namespace Perception.Engine
             }
             else
             {
-                return (AudioSource)source;
+                return (source as GameObject).GetComponent<AudioSource>();
             }
         }
     }
