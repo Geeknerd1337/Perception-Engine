@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -47,10 +48,11 @@ namespace Perception.Engine
         [OnEditorValueChanged("SyncPitchAndSemitones")]
         public Vector2 Pitch = new Vector2(1, 1);
 
-        [SerializeField]
+
         private SoundClipPlayOrder _playOrder;
 
         public bool Loops = false;
+        public SoundRollOffMode RollOffMode = SoundRollOffMode.Linear;
         public float MaxDistance = 500f;
         public int Priority = 0;
 
@@ -74,7 +76,91 @@ namespace Perception.Engine
             DestroyImmediate(_previewer.gameObject);
         }
 
+        [Button]
+        public void PlayPreview()
+        {
+            if (_previewer != null)
+            {
+                _previewer.Stop();
+                Play(_previewer, false);
+            }
+        }
+
+        [Button]
+        public void StopPreview()
+        {
+            if (_previewer != null)
+            {
+                _previewer.Stop();
+            }
+        }
+
 #endif
+        public AudioSource Play(AudioSource source = null, bool destroy = true)
+        {
+
+            if (Clips.Length == 0)
+            {
+                this.LogWarning($"Missing sound clips for {name}");
+                return null;
+            }
+
+            if (source == null)
+            {
+                GameObject obj = new GameObject($"Sound: {name}", typeof(AudioSource));
+                source = obj.GetComponent<AudioSource>();
+            }
+
+            source.clip = GetAudioClip();
+            source.volume = UnityEngine.Random.Range(Volume.x, Volume.y);
+            source.pitch = UseSemitones
+                ? Mathf.Pow(SEMITONES_TO_PITCH_CONVERSION_UNIT, UnityEngine.Random.Range(Semitones.x, Semitones.y))
+                : UnityEngine.Random.Range(Pitch.x, Pitch.y);
+            source.loop = Loops;
+            source.maxDistance = MaxDistance;
+            source.priority = Priority;
+            source.rolloffMode = (RollOffMode == SoundRollOffMode.Linear) ? AudioRolloffMode.Linear : AudioRolloffMode.Logarithmic;
+
+            source.Play();
+
+            if (!Loops && destroy)
+            {
+                Destroy(source.gameObject, source.clip.length / source.pitch);
+            }
+
+            return source;
+        }
+
+        public void PlayOneShot(AudioSource source)
+        {
+            source.volume = UnityEngine.Random.Range(Volume.x, Volume.y);
+            source.pitch = UnityEngine.Random.Range(Pitch.x, Pitch.y);
+            source.loop = Loops;
+            source.maxDistance = MaxDistance;
+            source.priority = Priority;
+            source.PlayOneShot(GetAudioClip());
+        }
+
+        public AudioClip GetAudioClip()
+        {
+
+            var clip = Clips[_playIndex >= Clips.Length ? 0 : _playIndex];
+
+            switch (_playOrder)
+            {
+                case SoundClipPlayOrder.Random:
+                    _playIndex = UnityEngine.Random.Range(0, Clips.Length);
+                    break;
+                case SoundClipPlayOrder.Sequential:
+                    _playIndex = (_playIndex + 1) % Clips.Length;
+                    break;
+                case SoundClipPlayOrder.Reverse:
+                    _playIndex = (_playIndex + Clips.Length - 1) % Clips.Length;
+                    break;
+            }
+
+            return clip;
+        }
 
         public void SyncPitchAndSemitones()
         {
@@ -98,7 +184,7 @@ namespace Perception.Engine
         enum SoundClipPlayOrder
         {
             Random,
-            In_order,
+            Sequential,
             Reverse
         }
 
