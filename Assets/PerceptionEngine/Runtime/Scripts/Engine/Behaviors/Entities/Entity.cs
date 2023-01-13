@@ -36,5 +36,10 @@ namespace Perception.Engine
         {
             All.Remove(this);
         }
+
+        public virtual void TakeDamage(DamageInfo info)
+        {
+
+        }
     }
 }
