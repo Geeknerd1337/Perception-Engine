@@ -11,6 +11,21 @@ namespace Perception.Engine
         /// </summary>
         public static List<Entity> All = new List<Entity>();
 
+        public virtual void OnEnable()
+        {
+
+        }
+
+        public virtual void Start()
+        {
+
+        }
+
+        public virtual void Update()
+        {
+
+        }
+
         public virtual void Awake()
         {
             All.Add(this);
