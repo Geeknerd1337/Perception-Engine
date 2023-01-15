@@ -161,6 +161,17 @@ namespace Perception.Engine
             return clip;
         }
 
+        public void InitializeAudiource(AudioSource original)
+        {
+            original.clip = GetAudioClip();
+            original.volume = Volume.x + UnityEngine.Random.Range(0, Volume.y - Volume.x);
+            original.pitch = Pitch.x + UnityEngine.Random.Range(0, Pitch.y - Pitch.x);
+            original.loop = Loops;
+            original.maxDistance = MaxDistance;
+            original.priority = Priority;
+        }
+
+
         public void SyncPitchAndSemitones()
         {
 
