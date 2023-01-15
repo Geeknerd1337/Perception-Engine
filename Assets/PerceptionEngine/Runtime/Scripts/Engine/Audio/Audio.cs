@@ -11,6 +11,12 @@ namespace Perception.Engine
     /// </summary>
     public class PerceptionAudio
     {
+
+        public static void FadeTo(AudioSource audioSource, float FadeTime, float TargetVolume)
+        {
+            GameManager.GetService<AudioService>().StartCoroutine(GameManager.GetService<AudioService>().FadeTo(audioSource, FadeTime, TargetVolume));
+        }
+
         /// <summary>
         /// Plays a given sound at a point in the world.
         /// </summary>
