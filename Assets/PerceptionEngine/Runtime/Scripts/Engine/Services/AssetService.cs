@@ -37,6 +37,7 @@ namespace Perception.Engine
             paths.Add(ResourceType.Sound, "Perception/Audio/Sound");
             paths.Add(ResourceType.AudioSource, "Perception/Audio/Audio Sources");
             paths.Add(ResourceType.Entity, "Perception/Entity");
+            paths.Add(ResourceType.UI, "Perception/Prefabs/UI");
 
             //Iterate over the resourcetype enumerator
             foreach (ResourceType type in System.Enum.GetValues(typeof(ResourceType)))
@@ -97,6 +98,23 @@ namespace Perception.Engine
                 return (source as GameObject).GetComponent<AudioSource>();
             }
         }
+
+        public static GameObject GetUI(string name)
+        {
+            //Try to get the sound from the library
+            bool potentialUI = GameManager.GetService<AssetService>().Library[ResourceType.UI].TryGetValue(name, out Object ui);
+
+            //If we couldn't find it, log an error and return null
+            if (!potentialUI)
+            {
+                GameManager.GetService<AssetService>().LogError($"Could not find UI {name}");
+                return null;
+            }
+            else
+            {
+                return (GameObject)ui;
+            }
+        }
     }
 
     /// <summary>
@@ -106,6 +124,7 @@ namespace Perception.Engine
     {
         Sound,
         AudioSource,
-        Entity
+        Entity,
+        UI
     }
 }
