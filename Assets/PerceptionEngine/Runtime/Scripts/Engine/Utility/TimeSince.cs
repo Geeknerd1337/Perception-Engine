@@ -32,7 +32,7 @@ namespace Perception.Engine
 
         public static implicit operator TimeSince(float ts)
         {
-            return new(ts);
+            return new TimeSince(ts);
         }
 
         public override bool Equals(object obj)
