@@ -12,6 +12,7 @@ namespace Perception.Editor
     [CustomPropertyDrawer(typeof(ModifiablePropertyAttribute), true)]
     public class ModifiablePropertyDrawer : PropertyDrawer
     {
+
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             var modifiable = (ModifiablePropertyAttribute)attribute;

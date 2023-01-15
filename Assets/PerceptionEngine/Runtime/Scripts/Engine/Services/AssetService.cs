@@ -38,6 +38,7 @@ namespace Perception.Engine
             paths.Add(ResourceType.AudioSource, "Perception/Audio/Audio Sources");
             paths.Add(ResourceType.Entity, "Perception/Entity");
             paths.Add(ResourceType.UI, "Perception/Prefabs/UI");
+            paths.Add(ResourceType.Surface, "Perception/Surfaces");
 
             //Iterate over the resourcetype enumerator
             foreach (ResourceType type in System.Enum.GetValues(typeof(ResourceType)))
@@ -125,6 +126,7 @@ namespace Perception.Engine
         Sound,
         AudioSource,
         Entity,
-        UI
+        UI,
+        Surface
     }
 }
