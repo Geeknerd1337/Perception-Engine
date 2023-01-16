@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEditor;
+using System.Reflection;
 
 
 namespace Perception.Engine
@@ -53,7 +54,35 @@ namespace Perception.Engine
             string conditionPath = propertyPath.Replace(property.name, condHAtt.ConditionalSourceField); //changes the path to the conditionalsource property path
             SerializedProperty sourcePropertyValue = property.serializedObject.FindProperty(conditionPath);
 
-            if (sourcePropertyValue != null)
+            //Find a non seriazlied accessor for the property if sourcePropertyValue is null
+            if (sourcePropertyValue == null)
+            {
+                string[] path = conditionPath.Split('.');
+                object obj = property.serializedObject.targetObject;
+                for (int i = 0; i < path.Length; i++)
+                {
+                    FieldInfo fieldInfo = obj.GetType().GetField(path[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                    if (fieldInfo != null)
+                    {
+                        obj = fieldInfo.GetValue(obj);
+                    }
+                    else
+                    {
+                        PropertyInfo propertyInfo = obj.GetType().GetProperty(path[i], BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                        if (propertyInfo != null)
+                        {
+                            obj = propertyInfo.GetValue(obj, null);
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Attempting to use a ShowIfAttribute but no matching SourcePropertyValue found in object: " + condHAtt.ConditionalSourceField);
+                            return true;
+                        }
+                    }
+                }
+                enabled = (bool)obj;
+            }
+            else if (sourcePropertyValue != null)
             {
                 enabled = sourcePropertyValue.boolValue;
             }

@@ -30,15 +30,22 @@ namespace Perception.Engine
             InitializeAssetLibrary();
         }
 
+        /// <summary>
+        /// A dictionary which maps resource types to their paths in the resources folder.
+        /// </summary>
+        public static Dictionary<ResourceType, string> ResourcePaths = new Dictionary<ResourceType, string>()
+        {
+            {ResourceType.Sound, "Perception/Audio/Sound"},
+            {ResourceType.AudioSource, "Perception/Audio/Audio Sources"},
+            {ResourceType.Entity, "Perception/Entity"},
+            {ResourceType.UI, "Perception/Prefabs/UI"},
+            {ResourceType.Surface, "Perception/Surfaces"},
+        };
+
         public void InitializeAssetLibrary()
         {
             //Adding these paths for now so things can be a little more organized on the unity side. Should probably be another system.
-            Dictionary<ResourceType, string> paths = new Dictionary<ResourceType, string>();
-            paths.Add(ResourceType.Sound, "Perception/Audio/Sound");
-            paths.Add(ResourceType.AudioSource, "Perception/Audio/Audio Sources");
-            paths.Add(ResourceType.Entity, "Perception/Entity");
-            paths.Add(ResourceType.UI, "Perception/Prefabs/UI");
-            paths.Add(ResourceType.Surface, "Perception/Surfaces");
+            Dictionary<ResourceType, string> paths = ResourcePaths;
 
             //Iterate over the resourcetype enumerator
             foreach (ResourceType type in System.Enum.GetValues(typeof(ResourceType)))

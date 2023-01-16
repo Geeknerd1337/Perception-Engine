@@ -10,7 +10,23 @@ namespace Perception.Engine
     [RequireComponent(typeof(Collider))]
     public class Surface : MonoBehaviour
     {
-        public static SurfaceObject GetSurface(Vector3 position, float range = 1f)
+        [ResourceDropdown(ResourceType.Surface)]
+        public string SurfaceName;
+
+        [ShowIf("_surfaceIsCustom")]
+        [ModifiableProperty]
+        public SurfaceObject Surf;
+
+        public bool _surfaceIsCustom
+        {
+            get
+            {
+                return SurfaceName.Equals("Custom");
+            }
+        }
+
+
+        public static SurfaceObject GetSurfaceObject(Vector3 position, float range = 1f)
         {
             RaycastHit hit;
 
@@ -26,7 +42,7 @@ namespace Perception.Engine
             return null;
         }
 
-        public SurfaceObject Surf;
+
 
     }
 }

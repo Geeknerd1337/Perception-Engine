@@ -32,7 +32,10 @@ namespace Perception.Editor
 
             bool visible = true;
             foreach (var attr in modifiable.modifiers.AsEnumerable().Reverse())
+            {
                 visible = attr.BeforeGUI(ref position, property, label, visible);
+
+            }
 
             if (visible)
                 modifiable.OnGUI(position, property, label);
