@@ -11,7 +11,7 @@ namespace Perception.Engine
     public class Surface : MonoBehaviour
     {
         [ResourceDropdown(ResourceType.Surface)]
-        public string SurfaceName;
+        public string SurfaceName = "Custom";
 
         [ShowIf("_surfaceIsCustom")]
         [ModifiableProperty]

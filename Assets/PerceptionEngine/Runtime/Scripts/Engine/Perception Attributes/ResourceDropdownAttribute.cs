@@ -39,6 +39,9 @@ namespace Perception.Engine
             //Select the name of each resource
             .Select(r => r.name).ToList();
 
+            //Alphabetize the list
+            resourceNames.Sort();
+
             //Add "Custom" to the list of names
             resourceNames.Add("Custom");
 
