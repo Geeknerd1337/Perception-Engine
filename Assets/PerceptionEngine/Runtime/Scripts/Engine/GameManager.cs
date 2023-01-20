@@ -49,6 +49,7 @@ namespace Perception.Engine
             AddService<AudioService>();
             AddService<CameraService>();
             AddService<UIService>();
+            AddService<SettingsService>();
         }
 
 
