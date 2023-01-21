@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Perception.Engine
 {
@@ -11,12 +12,16 @@ namespace Perception.Engine
     {
         /// <summary>
         /// A list of our services.
-        /// TODO: This should probably be its own class which manages this list itself. However I am trying to avoid having to do GameManager.Instance.Services.GetService as opposed to just GameManager.GetService
+        /// TODO: This should probably be its own class which manages this list itself. 
         /// </summary>
-
         private List<PerceptionService> services = new List<PerceptionService>();
 
         public static GameManager Instance { get; private set; }
+
+        /// <summary>
+        /// A pawn is the main character in the game. This is the character is the physical representation of the player.
+        /// </summary>
+        public static Entity Pawn { get; set; }
 
         public void Awake()
         {
@@ -31,6 +36,9 @@ namespace Perception.Engine
 
                 //Initialize the services
                 InitializeServices();
+
+                //Register to the scene loaded event
+                SceneManager.sceneLoaded += OnSceneLoaded;
             }
             else
             {
@@ -50,6 +58,7 @@ namespace Perception.Engine
             AddService<CameraService>();
             AddService<UIService>();
             AddService<SettingsService>();
+            AddService<EventService>();
         }
 
 
@@ -86,6 +95,11 @@ namespace Perception.Engine
 
             //If we didn't find the service, return null
             return null;
+        }
+
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+
         }
     }
 

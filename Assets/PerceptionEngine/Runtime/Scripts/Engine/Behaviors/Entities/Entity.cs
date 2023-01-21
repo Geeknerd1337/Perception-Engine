@@ -13,7 +13,12 @@ namespace Perception.Engine
 
         public virtual void OnEnable()
         {
+            EventService.Register(this);
+        }
 
+        public virtual void OnDisable()
+        {
+            EventService.Unregister(this);
         }
 
         public virtual void Start()

@@ -11,13 +11,13 @@ public class InspectorPlayground : MonoBehaviour
 {
     [Tab("Test")]
     public float Test;
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            PerceptionAudio.FromScreen("Bark");
+            EventService.Run("Bark");
         }
     }
 
 }
+
