@@ -41,6 +41,8 @@ namespace Perception.Editor
 
         private ButtonsDrawer _buttonsDrawer;
 
+        private Dictionary<string, List<SerializedProperty>> _boxGroups = new Dictionary<string, List<SerializedProperty>>();
+
 
         private void OnEnable()
         {
@@ -62,11 +64,14 @@ namespace Perception.Editor
 
             //Initialze the InspectorTabs
             InitializeInspectorTabs(Fields);
+            InitializeBoxGroups(Fields);
 
             _buttonsDrawer = new ButtonsDrawer(target);
         }
 
-        /// <summary>Initializes the InspectorTabs and gives them their relevant attributes</summary>
+        /// <summary>Initializes the InspectorTabs and gives them their relevant attributes
+        /// TODO: This should be moved to its own class eventually
+        /// </summary>
         public void InitializeInspectorTabs(FieldInfo[] f)
         {
             //Initialize a list of strings
@@ -119,9 +124,111 @@ namespace Perception.Editor
             }
         }
 
+        public void InitializeBoxGroups(FieldInfo[] f)
+        {
 
+            //Go over each field
+            for (int i = 0; i < f.Length; i++)
+            {
+                //Get the InspectorTab attribute
+                BoxGroupAttribute boxGroup = Attribute.GetCustomAttribute(f[i], typeof(BoxGroupAttribute)) as BoxGroupAttribute;
 
+                //If it has the attribute
+                if (boxGroup != null)
+                {
+                    //If we don't have this InspectorTab yet
+                    if (!_boxGroups.ContainsKey(boxGroup.Name))
+                    {
+                        //Create a new InspectorTab
+                        List<SerializedProperty> newBoxGroup = new List<SerializedProperty>();
+                        //Set its name
+                        newBoxGroup.Add(_soTarget.FindProperty(f[i].Name));
 
+                        //Add this InspectorTab to our InspectorTabs
+                        _boxGroups.Add(boxGroup.Name, newBoxGroup);
+                    }
+                    else
+                    {
+
+                        //Otherwise find this InspectorTab if it exists
+                        List<SerializedProperty> existingBoxGroup = _boxGroups[boxGroup.Name];
+                        //And if it does, add this field to its fields
+                        if (existingBoxGroup != null)
+                        {
+                            existingBoxGroup.Add(_soTarget.FindProperty(f[i].Name));
+                        }
+                    }
+                }
+            }
+        }
+
+        private bool FieldIsInBoxGroup(SerializedProperty field)
+        {
+            if (field.serializedObject.targetObject.GetType().GetField(field.name) == null)
+            {
+                return false;
+            }
+            //Return true if field has boxgroup attribute
+            return Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(BoxGroupAttribute)) != null;
+        }
+
+        public Attribute GetFieldAttribute<T>(SerializedProperty field)
+        {
+            return Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(T));
+        }
+
+        public void DrawBoxGroups()
+        {
+            InspectorTab current = _InspectorTabs[_currentInspectorTab];
+            foreach (var boxGroup in _boxGroups)
+            {
+                List<string> tabs = new List<string>();
+
+                //Check if each field has a tab attribute
+                for (int i = 0; i < boxGroup.Value.Count; i++)
+                {
+                    TabAttribute tab = GetFieldAttribute<TabAttribute>(boxGroup.Value[i]) as TabAttribute;
+                    if (tab != null)
+                    {
+                        tabs.Add(tab.Name);
+                    }
+                    else
+                    {
+                        tabs.Add("Default");
+                    }
+                }
+
+                //If the current tabs name exists in the list of tabs, draw the boxgroup
+                //This essentially draws it in a tab if one of the fields has a tab attribute
+                //TODO: Make it only draw the fields that have the same tab attribute
+                if (tabs.Count > 0)
+                {
+                    if (!tabs.Contains(current.Name))
+                    {
+
+                        continue;
+                    }
+                }
+
+                Color c = GUI.backgroundColor;
+                GUI.backgroundColor = Color.gray;
+                EditorGUILayout.BeginVertical(PerceptionStyles.BoxGroupHeaderStyle);
+                GUI.backgroundColor = c;
+                boxGroup.Value[0].isExpanded = EditorGUILayout.Foldout(boxGroup.Value[0].isExpanded, boxGroup.Key, true, PerceptionStyles.BoxGroupFoldoutStyle);
+                EditorGUILayout.EndVertical();
+
+                if (boxGroup.Value[0].isExpanded)
+                {
+                    EditorGUILayout.BeginVertical(PerceptionStyles.BoxGroupStyle);
+                    for (int i = 0; i < boxGroup.Value.Count; i++)
+                    {
+                        EditorGUILayout.PropertyField(boxGroup.Value[i], true);
+                    }
+                    EditorGUILayout.EndVertical();
+                }
+
+            }
+        }
 
         public override void OnInspectorGUI()
         {
@@ -147,6 +254,10 @@ namespace Perception.Editor
             if (_InspectorTabs.Count > 1)
             {
                 _currentInspectorTab = GUILayout.Toolbar(_currentInspectorTab, _InspectorTabNames.ToArray());
+
+                //Add a little space
+                EditorGUILayout.Space();
+
                 //Draw each property field
                 InspectorTab current = _InspectorTabs[_currentInspectorTab];
 
@@ -162,8 +273,14 @@ namespace Perception.Editor
 
                 foreach (SerializedProperty field in current.Fields)
                 {
-                    EditorGUILayout.PropertyField(field);
+                    if (!FieldIsInBoxGroup(field))
+                    {
+                        EditorGUILayout.PropertyField(field);
+                    }
                 }
+
+                DrawBoxGroups();
+
                 //TODO: This really sucks and has no place here, but is the only way I could get oneditorvalue changed to work
                 if (EditorGUI.EndChangeCheck())
                 {
@@ -205,12 +322,21 @@ namespace Perception.Editor
                         EditorGUI.BeginDisabledGroup(true);
                     }
                     enterChildren = false;
-                    EditorGUILayout.PropertyField(property, true);
+
+                    if (!FieldIsInBoxGroup(property))
+                    {
+                        EditorGUILayout.PropertyField(property, true);
+                    }
+
                     if (property.name == "m_Script")
                     {
                         EditorGUI.EndDisabledGroup();
                     }
                 }
+
+                DrawBoxGroups();
+
+
                 //TODO: This really sucks and has no place here, but is the only way I could get oneditorvalue changed to work, this whole module is going to need
                 //a proper re-write at some point
                 if (EditorGUI.EndChangeCheck())

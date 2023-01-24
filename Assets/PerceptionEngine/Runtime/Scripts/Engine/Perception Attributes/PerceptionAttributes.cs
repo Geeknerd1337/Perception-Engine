@@ -22,6 +22,16 @@ namespace Perception.Engine
         }
     }
 
+    [AttributeUsage(AttributeTargets.Field)]
+    public class BoxGroupAttribute : Attribute
+    {
+        public readonly string Name;
+        public BoxGroupAttribute(string n)
+        {
+            Name = n;
+        }
+    }
+
 
 
     public enum ButtonMode
