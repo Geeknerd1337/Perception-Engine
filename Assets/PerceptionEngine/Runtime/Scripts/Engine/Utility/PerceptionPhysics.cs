@@ -10,5 +10,6 @@ namespace Perception.Engine
     public class PerceptionPhysics
     {
         public static int GroundLayerMask = LayerMask.GetMask(new string[] { "Default" });
+        public static int InteractMask = LayerMask.GetMask(new string[] { "Interactable" });
     }
 }
