@@ -7,7 +7,7 @@ using Perception.Engine;
 /// <summary>
 /// A playground class I'm using to test my editor code.
 /// </summary>
-public class InspectorPlayground : MonoBehaviour
+public class InspectorPlayground : Entity
 {
 
     [Tab("Other")]
