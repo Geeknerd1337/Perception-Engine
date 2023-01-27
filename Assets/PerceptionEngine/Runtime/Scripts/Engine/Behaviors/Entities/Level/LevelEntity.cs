@@ -13,6 +13,7 @@ namespace Perception.Engine
     {
         public virtual string Icon => "LevelEntity.png";
 
+        [HideInInspector]
         public bool DrawGizmos;
 
         [BoxGroup("Events")]
@@ -23,7 +24,7 @@ namespace Perception.Engine
         {
             if (DrawGizmos)
             {
-                Gizmos.DrawIcon(transform.position, Icon, true);
+
                 DrawLinesToEvent(OnFired);
             }
         }

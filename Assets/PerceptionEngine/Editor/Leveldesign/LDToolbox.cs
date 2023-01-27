@@ -73,6 +73,7 @@ namespace Perception.Editor
         private SerializedObject _serializedObject;
         private List<System.Type> _types = new List<System.Type>();
         private int _typeIndex = 0;
+        public static bool DrawGizmos;
 
         private enum FilterTypes
         {
@@ -89,6 +90,7 @@ namespace Perception.Editor
 
         private void OnGUI()
         {
+            DrawConfig();
             DrawEntitySelector();
             DrawEntity();
             DrawEntitySearch();
@@ -103,6 +105,31 @@ namespace Perception.Editor
                 Handles.DrawWireDisc(GetCurrentMousePositionInScene(), Vector3.up, 0.5f);
                 Handles.color = Color.white;
                 sceneView.Repaint();
+
+                if (_receivedClickUpEvent)
+                {
+                    //Instantiate a new object of the selected type at the mouse position with an undo event
+                    GameObject newObject = new GameObject();
+                    newObject.transform.position = GetCurrentMousePositionInScene();
+                    newObject.AddComponent(_types[_typeIndex]);
+                    newObject.name = _types[_typeIndex].Name;
+                    Undo.RegisterCreatedObjectUndo(newObject, "Created new object");
+                    var ent = newObject.GetComponent(_types[_typeIndex]) as LevelEntity;
+                    ent.DrawGizmos = DrawGizmos;
+
+                    //Set the selected entity to the new object
+                    Selection.activeGameObject = newObject.gameObject;
+                    if (!_entityLocked)
+                    {
+                        _selectedEntity = ent;
+
+                        _serializedObject = new SerializedObject(_selectedEntity);
+                        _serializedObject.Update();
+                    }
+
+
+                    _receivedClickUpEvent = false;
+                }
             }
 
         }
@@ -194,6 +221,25 @@ namespace Perception.Editor
 
             EditorGUILayout.EndVertical();
 
+        }
+
+        private void DrawConfig()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Config", EditorStyles.boldLabel);
+            bool old = DrawGizmos;
+            DrawGizmos = EditorGUILayout.Toggle("Draw Gizmos", DrawGizmos);
+
+            if (old != DrawGizmos)
+            {
+                foreach (var entity in FindObjectsOfType<LevelEntity>())
+                {
+                    entity.DrawGizmos = DrawGizmos;
+                }
+                SceneView.RepaintAll();
+            }
+
+            EditorGUILayout.EndVertical();
         }
 
         /// <summary>
@@ -335,6 +381,8 @@ namespace Perception.Editor
             //Iterate over all the level entities
             foreach (var entity in LevelEntities)
             {
+                if (entity == null)
+                    continue;
                 //Filter the list based on the filter type using regex to check if the name is similar to the filter text
                 switch (_filterType)
                 {
