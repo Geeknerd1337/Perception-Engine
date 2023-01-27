@@ -28,6 +28,8 @@ public class InspectorPlayground : Entity
     [BoxGroup("Hey")]
     public UnityEvent TestEvent;
 
+    public UnityEvent Event2;
+
 
     [BoxGroup("Vectors")]
     [MinMaxSlider(0, 10)]

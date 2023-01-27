@@ -24,6 +24,10 @@ namespace Perception.Editor
         /// <summary>Serialized Object</summary>
         private SerializedObject _soTarget;
 
+
+        public static PerceptionEditor Instance;
+
+
         /// <summary>The Fields for our given objects</summary>
         FieldInfo[] Fields;
 
@@ -67,6 +71,9 @@ namespace Perception.Editor
             InitializeBoxGroups(Fields);
 
             _buttonsDrawer = new ButtonsDrawer(target);
+
+            Instance = this;
+
         }
 
 
@@ -128,7 +135,6 @@ namespace Perception.Editor
 
         public void InitializeBoxGroups(FieldInfo[] f)
         {
-
             //Go over each field
             for (int i = 0; i < f.Length; i++)
             {
@@ -379,6 +385,48 @@ namespace Perception.Editor
             }
 
         }
+
+        /// <summary>
+        /// This method effectively refreshes the SO target. Needed if another object modifies a serialized object like in the LDToolbox
+        /// </summary>
+        /// <param name="soTarget"></param>
+        public void SetSoTarget(SerializedObject soTarget)
+        {
+            _soTarget = soTarget;
+            //Get the fields from the target
+            Type t = _soTarget.targetObject.GetType();
+
+            //Extract the fields
+            Fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public);
+
+            if (_boxGroups != null)
+            {
+                _boxGroups.Clear();
+            }
+
+            if (_InspectorTabNames != null)
+            {
+                _InspectorTabNames.Clear();
+                _InspectorTabNames.Add("Default");
+
+            }
+
+            if (_InspectorTabs != null)
+            {
+                _InspectorTabs.Clear();
+                _InspectorTabs.Add(new InspectorTab("Default"));
+            }
+
+            _currentInspectorTab = 0;
+
+            //Re-initialize the inspector tabs
+            InitializeInspectorTabs(Fields);
+            InitializeBoxGroups(Fields);
+
+
+            Repaint();
+        }
+
     }
 
 

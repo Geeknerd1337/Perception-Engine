@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using UnityEngine.Events;
 using System.Reflection;
 using Perception.Engine;
+using System;
+using System.Linq;
 
 namespace Perception.Editor
 {
@@ -38,6 +40,11 @@ namespace Perception.Editor
 
             //Set the selected entity to the first one
             _selectedEntity = null;
+            SceneView.duringSceneGui += OnSceneGUI;
+            SceneView.beforeSceneGui += BeforeSceneGUI;
+
+            GetAllLevelEntityTypes();
+
 
         }
 
@@ -46,16 +53,26 @@ namespace Perception.Editor
         {
             //Destroy the scene camera
             DestroyImmediate(_sceneCamera.gameObject);
+
+            SceneView.duringSceneGui -= OnSceneGUI;
+            SceneView.beforeSceneGui -= BeforeSceneGUI;
         }
 
-
         public List<LevelEntity> LevelEntities = new List<LevelEntity>();
-
         private LevelEntity _selectedEntity;
         private int _levelEntityIndex = 0;
         private string _filterText = "";
         private bool _entityLocked = false;
+        private bool _receivedClickDownEvent = false;
+        private bool _receivedClickUpEvent = false;
+        private bool _shiftDownEvent = false;
+
+        private bool _shiftUpEvent = false;
+
+        private bool _hasPlaceableEntity = false;
         private SerializedObject _serializedObject;
+        private List<System.Type> _types = new List<System.Type>();
+        private int _typeIndex = 0;
 
         private enum FilterTypes
         {
@@ -72,8 +89,74 @@ namespace Perception.Editor
 
         private void OnGUI()
         {
-            DrawEntity();
             DrawEntitySelector();
+            DrawEntity();
+            DrawEntitySearch();
+        }
+
+        //On scene gui
+        private void OnSceneGUI(SceneView sceneView)
+        {
+            if (_shiftDownEvent)
+            {
+                Handles.color = Color.red;
+                Handles.DrawWireDisc(GetCurrentMousePositionInScene(), Vector3.up, 0.5f);
+                Handles.color = Color.white;
+                sceneView.Repaint();
+            }
+
+        }
+
+        void BeforeSceneGUI(SceneView sceneView)
+        {
+
+
+            if (!_hasPlaceableEntity)
+            {
+                _receivedClickDownEvent = false;
+                _receivedClickUpEvent = false;
+                _shiftDownEvent = false;
+                _shiftUpEvent = false;
+            }
+            else
+            {
+                if (_shiftDownEvent)
+                {
+                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                    {
+                        _receivedClickDownEvent = true;
+                        Event.current.Use();
+                    }
+
+                    if (_receivedClickDownEvent && Event.current.type == EventType.MouseUp && Event.current.button == 0)
+                    {
+                        _receivedClickDownEvent = false;
+                        _receivedClickUpEvent = true;
+                        Event.current.Use();
+                    }
+                }
+
+                if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.LeftShift)
+                {
+                    _shiftDownEvent = true;
+
+
+                }
+
+                if (_shiftDownEvent && Event.current.type == EventType.KeyUp && Event.current.keyCode == KeyCode.LeftShift)
+                {
+                    _shiftDownEvent = false;
+                    _shiftUpEvent = true;
+
+                }
+            }
+        }
+
+        Vector3 GetCurrentMousePositionInScene()
+        {
+            Vector3 mousePosition = Event.current.mousePosition;
+            var placeObject = HandleUtility.PlaceObject(mousePosition, out var newPosition, out var normal);
+            return placeObject ? newPosition : HandleUtility.GUIPointToWorldRay(mousePosition).GetPoint(10);
         }
 
         private void CreateSceneCamera()
@@ -93,6 +176,23 @@ namespace Perception.Editor
                 _sceneCamera.transform.rotation = _selectedEntity.transform.rotation;
                 Handles.DrawCamera(new Rect(0, 0, 200, 200), _sceneCamera);
             }
+
+        }
+
+        /// <summary>
+        /// Draws the portion of the window where you can select from the available entities and spawn them
+        /// </summary>
+        private void DrawEntitySelector()
+        {
+            //Vertical group
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            //Draw a drop down of all the types in the list that aren't null, if the type is null, draw the word "None"
+            _typeIndex = EditorGUILayout.Popup("Type", _typeIndex, _types.Select(x => x == null ? "None" : x.Name).ToArray());
+            _hasPlaceableEntity = _typeIndex != 0;
+
+
+
+            EditorGUILayout.EndVertical();
 
         }
 
@@ -121,10 +221,14 @@ namespace Perception.Editor
 
                 EditorGUILayout.EndHorizontal();
 
+                //Draw a textfield for editing the selected entities name
+                _selectedEntity.name = EditorGUILayout.TextField("Name", _selectedEntity.name);
+
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
                 EditorGUILayout.LabelField("Entity Events");
 
+                _serializedObject.Update();
 
                 EditorGUI.BeginChangeCheck();
                 //Iterate over the fields of the object only drawing the ones that are UnityEvents
@@ -132,21 +236,19 @@ namespace Perception.Editor
                 {
                     if (field.FieldType == typeof(UnityEvent))
                     {
-                        _serializedObject.Update();
-                        //Draw the unityevent and allow us to edit it
-                        EditorGUILayout.PropertyField(_serializedObject.FindProperty(field.Name), true);
 
+                        EditorGUILayout.PropertyField(_serializedObject.FindProperty(field.Name), true);
                     }
                 }
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Debug.Log("Wahoo");
-                    //Apply the changes to the serialized object
                     _serializedObject.ApplyModifiedProperties();
-                    _serializedObject.UpdateIfRequiredOrScript();
 
+                    //Find the perception editor and call SetSoTarget
+                    PerceptionEditor.Instance.SetSoTarget(_serializedObject);
                 }
+
 
 
                 EditorGUILayout.EndVertical();
@@ -159,20 +261,10 @@ namespace Perception.Editor
 
         }
 
-        public static void RepaintInspector(System.Type t)
-        {
-            UnityEditor.Editor[] ed = (UnityEditor.Editor[])Resources.FindObjectsOfTypeAll<UnityEditor.Editor>();
-            for (int i = 0; i < ed.Length; i++)
-            {
-                if (ed[i].GetType() == t)
-                {
-                    ed[i].Repaint();
-                    return;
-                }
-            }
-        }
-
-        private void DrawEntitySelector()
+        /// <summary>
+        /// Draws the entity search window where you can search for levelEntities and select them
+        /// </summary>
+        private void DrawEntitySearch()
         {
 
             //Vertical group
@@ -200,8 +292,12 @@ namespace Perception.Editor
                         _levelEntityIndex = LevelEntities.IndexOf(entity);
                         //Select the entity in the scene
                         Selection.activeGameObject = entity.gameObject;
-                        _selectedEntity = entity;
-                        _serializedObject = new SerializedObject(_selectedEntity);
+                        if (!_entityLocked)
+                        {
+                            _selectedEntity = entity;
+                            _serializedObject = new SerializedObject(_selectedEntity);
+                            _serializedObject.Update();
+                        }
                         //Set the focus to the button
                         GUI.FocusControl(null);
 
@@ -274,6 +370,37 @@ namespace Perception.Editor
         //A method which calls ongui when the selection changes
         private void OnSelectionChange()
         {
+
+        }
+
+        private void GetAllLevelEntityTypes()
+        {
+            if (_types == null)
+            {
+                _types = new List<Type>();
+            }
+            //Populate the list of level entity types
+            _types.Clear();
+
+            //Add an empty type to the list
+            _types.Add(null);
+
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                foreach (var type in assembly.GetTypes())
+                {
+                    if (type.IsSubclassOf(typeof(LevelEntity)))
+                    {
+                        _types.Add(type);
+                    }
+                    //Or if the type is a level entity
+                    else if (type == typeof(LevelEntity))
+                    {
+                        _types.Add(type);
+                    }
+                }
+            }
+
 
         }
 

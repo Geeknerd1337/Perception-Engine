@@ -15,11 +15,9 @@ namespace Perception.Engine
 
         public bool DrawGizmos;
 
-        public int Test;
-
-
         [BoxGroup("Events")]
         public UnityEvent OnFired;
+
 
         public virtual void OnDrawGizmos()
         {
