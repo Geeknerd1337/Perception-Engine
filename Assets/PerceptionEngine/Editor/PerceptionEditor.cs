@@ -69,6 +69,8 @@ namespace Perception.Editor
             _buttonsDrawer = new ButtonsDrawer(target);
         }
 
+
+
         /// <summary>Initializes the InspectorTabs and gives them their relevant attributes
         /// TODO: This should be moved to its own class eventually
         /// </summary>

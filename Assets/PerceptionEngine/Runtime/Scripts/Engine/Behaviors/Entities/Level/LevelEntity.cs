@@ -46,6 +46,9 @@ namespace Perception.Engine
                     var mono = obj as MonoBehaviour;
                     var pos = mono.transform.position;
                     var rot = mono.transform.rotation;
+
+                    //Back pos away from the object by 1 unit
+                    pos -= (pos - transform.position).normalized * 1f;
                     DrawArrow(transform.position, pos);
                 }
                 //If obj is a transform or a gameobject
@@ -53,6 +56,7 @@ namespace Perception.Engine
                 {
                     var pos = t.position;
                     var rot = t.rotation;
+                    pos -= (pos - transform.position).normalized * 1f;
                     DrawArrow(transform.position, pos);
                 }
 
@@ -60,6 +64,7 @@ namespace Perception.Engine
                 {
                     var pos = g.transform.position;
                     var rot = g.transform.rotation;
+                    pos -= (pos - transform.position).normalized * 1f;
                     DrawArrow(transform.position, pos);
                 }
             }

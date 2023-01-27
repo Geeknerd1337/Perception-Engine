@@ -125,9 +125,6 @@ namespace Perception.Editor
 
                 EditorGUILayout.LabelField("Entity Events");
 
-                //Get the serialized object of the selected entity
-
-
 
                 EditorGUI.BeginChangeCheck();
                 //Iterate over the fields of the object only drawing the ones that are UnityEvents
@@ -147,13 +144,7 @@ namespace Perception.Editor
                     Debug.Log("Wahoo");
                     //Apply the changes to the serialized object
                     _serializedObject.ApplyModifiedProperties();
-
-                    //Update the scene
-                    Repaint();
-
-                    EditorUtility.SetDirty(_serializedObject.targetObject);
-
-                    Resources.FindObjectsOfTypeAll<UnityEditor.Editor>()[0].Repaint();
+                    _serializedObject.UpdateIfRequiredOrScript();
 
                 }
 
@@ -211,6 +202,8 @@ namespace Perception.Editor
                         Selection.activeGameObject = entity.gameObject;
                         _selectedEntity = entity;
                         _serializedObject = new SerializedObject(_selectedEntity);
+                        //Set the focus to the button
+                        GUI.FocusControl(null);
 
                     }
                 }
