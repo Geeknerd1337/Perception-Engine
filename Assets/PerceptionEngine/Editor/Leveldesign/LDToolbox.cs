@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.Text.RegularExpressions;
+using UnityEngine.Events;
+using System.Reflection;
+using Perception.Engine;
 
-namespace Perception.Engine
+namespace Perception.Editor
 {
 
 
@@ -34,7 +37,7 @@ namespace Perception.Engine
             }
 
             //Set the selected entity to the first one
-            _selectedEntity = LevelEntities[_levelEntityIndex];
+            _selectedEntity = null;
 
         }
 
@@ -51,6 +54,8 @@ namespace Perception.Engine
         private LevelEntity _selectedEntity;
         private int _levelEntityIndex = 0;
         private string _filterText = "";
+        private bool _entityLocked = false;
+        private SerializedObject _serializedObject;
 
         private enum FilterTypes
         {
@@ -67,6 +72,7 @@ namespace Perception.Engine
 
         private void OnGUI()
         {
+            DrawEntity();
             DrawEntitySelector();
         }
 
@@ -93,18 +99,97 @@ namespace Perception.Engine
         /// <summary>
         /// This draws any UnityEvents that are attached to the selected entity.
         /// </summary>
-        private void DrawEntityEvents()
+        private void DrawEntity()
         {
+            //Return if the selected entity is null
+            if (_selectedEntity != null)
+            {
+                //Vertical group
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
+                //Horizontal group
+                EditorGUILayout.BeginHorizontal();
+                //Draw the name of the entity in a label
+                EditorGUILayout.LabelField("Selected Entity: " + _selectedEntity.name, EditorStyles.boldLabel);
+
+                //Draw a button to lock the entity at the right of the window
+                if (GUILayout.Button(_entityLocked ? "Unlock" : "Lock"))
+                {
+                    _entityLocked = !_entityLocked;
+                }
+
+
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+
+                EditorGUILayout.LabelField("Entity Events");
+
+                //Get the serialized object of the selected entity
+
+
+
+                EditorGUI.BeginChangeCheck();
+                //Iterate over the fields of the object only drawing the ones that are UnityEvents
+                foreach (var field in _selectedEntity.GetType().GetFields())
+                {
+                    if (field.FieldType == typeof(UnityEvent))
+                    {
+                        _serializedObject.Update();
+                        //Draw the unityevent and allow us to edit it
+                        EditorGUILayout.PropertyField(_serializedObject.FindProperty(field.Name), true);
+
+                    }
+                }
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Debug.Log("Wahoo");
+                    //Apply the changes to the serialized object
+                    _serializedObject.ApplyModifiedProperties();
+
+                    //Update the scene
+                    Repaint();
+
+                    EditorUtility.SetDirty(_serializedObject.targetObject);
+
+                    Resources.FindObjectsOfTypeAll<UnityEditor.Editor>()[0].Repaint();
+
+                }
+
+
+                EditorGUILayout.EndVertical();
+
+                EditorGUILayout.EndVertical();
+
+
+
+            }
+
+        }
+
+        public static void RepaintInspector(System.Type t)
+        {
+            UnityEditor.Editor[] ed = (UnityEditor.Editor[])Resources.FindObjectsOfTypeAll<UnityEditor.Editor>();
+            for (int i = 0; i < ed.Length; i++)
+            {
+                if (ed[i].GetType() == t)
+                {
+                    ed[i].Repaint();
+                    return;
+                }
+            }
         }
 
         private void DrawEntitySelector()
         {
+
             //Vertical group
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
             DrawEntityFilter();
 
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             //Use beginscrollview to draw a scrollable list of level entities
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.Height(200));
 
@@ -125,11 +210,14 @@ namespace Perception.Engine
                         //Select the entity in the scene
                         Selection.activeGameObject = entity.gameObject;
                         _selectedEntity = entity;
+                        _serializedObject = new SerializedObject(_selectedEntity);
+
                     }
                 }
             }
 
             EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
 
             //End vertical group
             EditorGUILayout.EndVertical();

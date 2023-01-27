@@ -177,6 +177,8 @@ namespace Perception.Editor
             return Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(T));
         }
 
+
+
         public void DrawBoxGroups()
         {
             InspectorTab current = _InspectorTabs[_currentInspectorTab];
