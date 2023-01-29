@@ -90,6 +90,7 @@ namespace Perception.Editor
         private void OnGUI()
         {
             DrawConfig();
+            DrawToolbox();
             DrawEntitySelector();
             DrawEntity();
             DrawEntitySearch();
@@ -212,6 +213,8 @@ namespace Perception.Editor
         {
             //Vertical group
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            //Entity placement label
+            EditorGUILayout.LabelField("Entity Placement", EditorStyles.boldLabel);
             //Draw a drop down of all the types in the list that aren't null, if the type is null, draw the word "None"
             _typeIndex = EditorGUILayout.Popup("Type", _typeIndex, _types.Select(x => x == null ? "None" : x.Name).ToArray());
             _hasPlaceableEntity = _typeIndex != 0;
@@ -220,6 +223,13 @@ namespace Perception.Editor
 
             EditorGUILayout.EndVertical();
 
+        }
+
+        public void DrawToolbox()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Toolbox", EditorStyles.boldLabel);
+            EditorGUILayout.EndVertical();
         }
 
         private void DrawConfig()

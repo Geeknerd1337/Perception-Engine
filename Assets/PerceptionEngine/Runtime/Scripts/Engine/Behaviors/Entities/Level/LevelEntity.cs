@@ -19,6 +19,9 @@ namespace Perception.Engine
         [BoxGroup("Events")]
         public UnityEvent OnFired;
 
+        [BoxGroup("Config")]
+        public bool Active = true;
+
 
         public virtual void OnDrawGizmos()
         {
@@ -27,6 +30,11 @@ namespace Perception.Engine
 
                 DrawLinesToEvent(OnFired);
             }
+        }
+
+        public virtual void Fire()
+        {
+            if (Active) OnFired.Invoke();
         }
 
 
