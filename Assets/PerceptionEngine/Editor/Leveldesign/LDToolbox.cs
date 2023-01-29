@@ -21,7 +21,6 @@ namespace Perception.Editor
             GetWindow<LDToolbox>("Leveldesign Toolbox");
         }
 
-        //On initialize 
         private void OnEnable()
         {
             //Create the scene camera
@@ -343,6 +342,8 @@ namespace Perception.Editor
                             _selectedEntity = entity;
                             _serializedObject = new SerializedObject(_selectedEntity);
                             _serializedObject.Update();
+                            //Focus the selected entity
+
                         }
                         //Set the focus to the button
                         GUI.FocusControl(null);
@@ -415,7 +416,7 @@ namespace Perception.Editor
         }
 
 
-        //A method which calls ongui when the selection changes
+
         private void OnSelectionChange()
         {
 
