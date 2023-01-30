@@ -40,6 +40,22 @@ namespace Perception.Engine
             {ResourceType.Entity, "Perception/Entity"},
             {ResourceType.UI, "Perception/Prefabs/UI"},
             {ResourceType.Surface, "Perception/Surfaces"},
+            {ResourceType.Material, "Perception/Materials"},
+        };
+
+
+        /// <summary>
+        /// A dictionary which maps types to resource types. This is used to determine what type of resource we're trying to load
+        /// TODO: This should be combined with the ResourcePaths dictionary as a single dictionary which maps types to a tuple of resource type and path
+        /// </summary>
+        public static Dictionary<System.Type, ResourceType> TypeToResourceType = new Dictionary<System.Type, ResourceType>()
+        {
+            {typeof(SoundObject), ResourceType.Sound},
+            {typeof(AudioSource), ResourceType.AudioSource},
+            {typeof(Entity), ResourceType.Entity},
+            {typeof(GameObject), ResourceType.UI},
+            {typeof(Surface), ResourceType.Surface},
+            {typeof(Material), ResourceType.Material},
         };
 
         public void InitializeAssetLibrary()
@@ -123,6 +139,26 @@ namespace Perception.Engine
                 return (GameObject)ui;
             }
         }
+
+        public static T GetResource<T>(string name) where T : Object
+        {
+            //Get the type of the resource we're looking for
+            ResourceType type = TypeToResourceType[typeof(T)];
+
+            //Try to get the sound from the library
+            bool potentialResource = GameManager.GetService<AssetService>().Library[type].TryGetValue(name, out Object resource);
+
+            //If we couldn't find it, log an error and return null
+            if (!potentialResource)
+            {
+                GameManager.GetService<AssetService>().LogError($"Could not find resource {name}");
+                return null;
+            }
+            else
+            {
+                return (T)resource;
+            }
+        }
     }
 
     /// <summary>
@@ -134,6 +170,7 @@ namespace Perception.Engine
         AudioSource,
         Entity,
         UI,
-        Surface
+        Surface,
+        Material
     }
 }
