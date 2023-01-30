@@ -229,6 +229,17 @@ namespace Perception.Editor
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
             EditorGUILayout.LabelField("Toolbox", EditorStyles.boldLabel);
+
+            //Get the currently selected gameobject
+            var selected = Selection.activeGameObject;
+
+            if (selected != null && selected.GetComponent<LogicTrigger>() == null)
+            {
+                if (GUILayout.Button("Convert to Logic trigger"))
+                {
+                    LDToolboxHelper.ConvertToTrigger(selected);
+                }
+            }
             EditorGUILayout.EndVertical();
         }
 

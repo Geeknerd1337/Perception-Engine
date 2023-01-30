@@ -21,7 +21,12 @@ namespace Perception.Engine
 
         [BoxGroup("Events")]
         public UnityEvent OnTriggerEnterEvent;
+
+        [BoxGroup("Events")]
         public UnityEvent OnTriggerExitEvent;
+
+        [BoxGroup("Events")]
+        public UnityEvent OnTriggerStayEvent;
 
         private TimeSince _timeSinceLastTriggered;
         private bool _triggered = false;
@@ -62,7 +67,7 @@ namespace Perception.Engine
             if (_timeSinceLastTriggered > TimeBetweenTriggers && Tags.Contains(other.tag))
             {
                 _timeSinceLastTriggered = 0;
-                OnTriggerEnterEvent.Invoke();
+                OnTriggerStayEvent.Invoke();
             }
         }
 
