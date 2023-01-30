@@ -37,7 +37,7 @@ public class InspectorPlayground : Entity
     public Vector2 TestVector2;
 
 
-    void Update()
+    public override void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
