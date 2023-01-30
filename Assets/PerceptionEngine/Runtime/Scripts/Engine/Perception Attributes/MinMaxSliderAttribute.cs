@@ -109,21 +109,38 @@ namespace Perception.Engine
 
             oldPosition.x += EditorGUIUtility.labelWidth - 10f;
 
+            //Draw a text field for the min value
+            var minPosition = oldPosition;
+            minPosition.y += 15;
+            //Subtract half the width of the float field to center it
+
+
+            minPosition.width = 35;
+            range.x = EditorGUI.FloatField(minPosition, range.x);
+
+
             //Draw the slider
             EditorGUI.MinMaxSlider(oldPosition, ref range.x, ref range.y, Min, Max);
+
+            //Draw a text field for the max value
+            var maxPosition = oldPosition;
+            maxPosition.y += 15;
+            //Subtract half the width of the float field to center it
+            maxPosition.x -= 35;
+            maxPosition.width = 35;
+            maxPosition.x += oldPosition.width;
+            range.y = EditorGUI.FloatField(maxPosition, range.y);
 
             //Draw a label for range.x at the minmaxslider's left slider handle position
             var leftLabelPosition = oldPosition;
             leftLabelPosition.x += oldPosition.width * (range.x - Min) / (Max - Min);
             leftLabelPosition.y += 15;
+
             //Get the width of the string
             var stringWidth = GUI.skin.label.CalcSize(new GUIContent(range.x.ToString("0.000"))).x;
             //Subtract half the width of the string to center it
             leftLabelPosition.x -= (float)stringWidth / 2f;
 
-
-            //Draw the label field, center the text
-            EditorGUI.LabelField(leftLabelPosition, range.x.ToString("0.000"));
 
             //Do the same for the right hand side
             var rightLabelPosition = oldPosition;
@@ -131,7 +148,26 @@ namespace Perception.Engine
             rightLabelPosition.y += 15;
             stringWidth = GUI.skin.label.CalcSize(new GUIContent(range.y.ToString("0.000"))).x;
             rightLabelPosition.x -= (float)stringWidth / 2f;
-            EditorGUI.LabelField(rightLabelPosition, range.y.ToString("0.000"));
+
+            //Add 15 to the leftLabelPositionY if the two labels overlap
+            if (leftLabelPosition.x + stringWidth > rightLabelPosition.x)
+            {
+                rightLabelPosition.y += 15;
+            }
+            //A single Boolean for if either label overlap either of the edges of the slider + 35
+            bool leftLabelOverlaps = leftLabelPosition.x + stringWidth > oldPosition.x + oldPosition.width - 35 || leftLabelPosition.x < oldPosition.x + 35;
+            bool rightLabelOverlaps = rightLabelPosition.x + stringWidth > oldPosition.x + oldPosition.width - 35 || rightLabelPosition.x < oldPosition.x + 35;
+
+
+            if (!leftLabelOverlaps)
+            {
+                EditorGUI.LabelField(leftLabelPosition, range.x.ToString("0.000"));
+            }
+
+            if (!rightLabelOverlaps)
+            {
+                EditorGUI.LabelField(rightLabelPosition, range.y.ToString("0.000"));
+            }
 
             //Set the value
             property.vector2Value = range;
@@ -139,7 +175,7 @@ namespace Perception.Engine
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return base.GetPropertyHeight(property, label) + 15;
+            return base.GetPropertyHeight(property, label) + 30;
         }
 #endif
     }
