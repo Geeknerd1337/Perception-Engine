@@ -49,7 +49,7 @@ namespace Perception.Engine
         public Vector2 Pitch = new Vector2(1, 1);
 
 
-        private SoundClipPlayOrder _playOrder;
+        public SoundClipPlayOrder _playOrder;
 
         public bool Loops = false;
         public SoundRollOffMode RollOffMode = SoundRollOffMode.Linear;
@@ -191,14 +191,16 @@ namespace Perception.Engine
 
         }
 
-        enum SoundClipPlayOrder
-        {
-            Random,
-            Sequential,
-            Reverse
-        }
 
 
+
+    }
+
+    public enum SoundClipPlayOrder
+    {
+        Random,
+        Sequential,
+        Reverse
     }
 
     public enum SoundRollOffMode

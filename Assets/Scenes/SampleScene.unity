@@ -236,6 +236,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Active: 1
+  ID: b53c27bc-f155-4caf-af8e-1bb9d08b80c5
 --- !u!4 &373645298
 Transform:
   m_ObjectHideFlags: 0
@@ -520,6 +521,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Active: 1
+  ID: 6f2ee92f-8701-4a1f-af87-781737ad190f
   TriggerOnce: 0
   TimeBetweenTriggers: 0
   Tags:
@@ -859,6 +861,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Active: 1
+  ID: bb8eb8a0-c820-4eb5-b0e6-215592aa3253
 --- !u!4 &769169885
 Transform:
   m_ObjectHideFlags: 0
@@ -919,6 +922,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Active: 1
+  ID: 50d082b3-97bd-4b48-ad7b-881deff3c787
 --- !u!4 &926890114
 Transform:
   m_ObjectHideFlags: 0
@@ -932,6 +936,58 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1081020799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1081020801}
+  - component: {fileID: 1081020800}
+  m_Layer: 0
+  m_Name: InfoEntity
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1081020800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081020799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70d4bded862832d488e667d273e636df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DrawGizmos: 0
+  OnFired:
+    m_PersistentCalls:
+      m_Calls: []
+  Active: 1
+  ID: fc4688ca-c2aa-45fb-98ce-6e020cf076ec
+  Comment: "Hey, my name is jhosh wilson fro mthe agle one development team \nand
+    I am here "
+  Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!4 &1081020801
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081020799}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 22.171886, y: 19.057825, z: -45.83591}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1114774156
 GameObject:
@@ -979,6 +1035,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Active: 1
+  ID: 4410cbb0-894e-420f-8751-31e562ab5998
 --- !u!4 &1114774158
 Transform:
   m_ObjectHideFlags: 0
@@ -1039,6 +1096,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   Active: 1
+  ID: fd8c0d61-d692-4c63-9914-4eaa0888564d
 --- !u!4 &1308075155
 Transform:
   m_ObjectHideFlags: 0
@@ -1130,7 +1188,15 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Active: 1
-  DataEntries: []
+  ID: 282b845b-1a0c-4a85-8af6-08dc26c83c16
+  DataEntries:
+  - Key: 
+    StringValue: 
+    IntValue: 0
+    FloatValue: 0
+    BoolValue: 0
+    Vector3Value: {x: 0, y: 0, z: 0}
+    Type: 0
 --- !u!4 &1737605783
 Transform:
   m_ObjectHideFlags: 0
@@ -1143,7 +1209,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1774605762
 GameObject:
@@ -1222,6 +1288,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   Active: 1
+  ID: 47806959-86fb-4625-89c4-f272ebeed6f3
   Delay: 0
 --- !u!4 &1833856210
 Transform:

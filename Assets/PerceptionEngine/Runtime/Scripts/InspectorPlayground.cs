@@ -41,7 +41,7 @@ public class InspectorPlayground : Entity
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            EventService.Run("Bark");
+            PerceptionAudio.FromWorld("Bark", this.transform.position);
         }
     }
 
