@@ -81,7 +81,14 @@ namespace Perception.Editor
             Name
         }
 
+        private enum SortTypes
+        {
+            Alphabetical,
+            Distance
+        }
+
         private FilterTypes _filterType = FilterTypes.All;
+        private SortTypes _sortType = SortTypes.Alphabetical;
 
         Vector2 scrollPos;
 
@@ -95,6 +102,7 @@ namespace Perception.Editor
             DrawEntity();
             DrawEntitySearch();
         }
+
 
         //On scene gui
         private void OnSceneGUI(SceneView sceneView)
@@ -115,6 +123,8 @@ namespace Perception.Editor
                     newObject.name = _types[_typeIndex].Name;
                     Undo.RegisterCreatedObjectUndo(newObject, "Created new object");
                     var ent = newObject.GetComponent(_types[_typeIndex]) as LevelEntity;
+                    //Set the ints ID to a new GUID
+                    ent.ID = Guid.NewGuid().ToString();
                     ent.DrawGizmos = DrawGizmos;
 
                     //Set the selected entity to the new object
@@ -336,6 +346,7 @@ namespace Perception.Editor
             //Vertical group
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
+            DrawEntitySort();
             DrawEntityFilter();
 
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -396,6 +407,16 @@ namespace Perception.Editor
             EditorGUILayout.EndHorizontal();
         }
 
+        private void DrawEntitySort()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Sort", EditorStyles.boldLabel);
+            EditorGUILayout.BeginHorizontal();
+            _sortType = (SortTypes)EditorGUILayout.EnumPopup(_sortType);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+        }
+
         private List<LevelEntity> GetFilteredList()
         {
             var filteredList = new List<LevelEntity>();
@@ -431,6 +452,18 @@ namespace Perception.Editor
                         }
                         break;
                 }
+            }
+
+            //Sort the list
+            switch (_sortType)
+            {
+                case SortTypes.Alphabetical:
+                    filteredList.Sort((x, y) => x.name.CompareTo(y.name));
+                    break;
+                case SortTypes.Distance:
+                    //Sort by distance to scene camera
+                    filteredList.Sort((x, y) => Vector3.Distance(x.transform.position, SceneView.lastActiveSceneView.camera.transform.position).CompareTo(Vector3.Distance(y.transform.position, SceneView.lastActiveSceneView.camera.transform.position)));
+                    break;
             }
 
             return filteredList;
@@ -485,7 +518,13 @@ namespace Perception.Editor
                 if (entity != null)
                 {
                     LevelEntities.Add(entity);
+
+                    if (entity.ID == null || entity.ID == "")
+                    {
+                        entity.ID = Guid.NewGuid().ToString();
+                    }
                 }
+
             }
             //Reorder the list alphabetically
             LevelEntities.Sort((x, y) => x.name.CompareTo(y.name));

@@ -22,6 +22,9 @@ namespace Perception.Engine
         [BoxGroup("Config")]
         public bool Active = true;
 
+        [BoxGroup("Config")]
+        public string ID;
+
 
         public virtual void OnDrawGizmos()
         {
