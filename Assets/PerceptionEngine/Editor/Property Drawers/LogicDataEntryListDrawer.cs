@@ -18,6 +18,7 @@ namespace Perception.Editor
             //Draw the Key, Type, and appropriate value field
             EditorGUI.BeginProperty(position, label, property);
 
+            //Draw the name of the variable
 
             // Don't make child fields be indented
             var indent = EditorGUI.indentLevel;

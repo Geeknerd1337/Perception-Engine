@@ -18,11 +18,11 @@ namespace Perception.Engine
                 {
                     if (entry.Type == LogicDataEntryType.Int)
                     {
-                        entry.IntValue += i;
+                        Input.SetValue(Value, entry.IntValue + i);
                     }
                     else if (entry.Type == LogicDataEntryType.Float)
                     {
-                        entry.FloatValue += i;
+                        Input.SetValue(Value, entry.FloatValue + i);
                     }
                     else
                     {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 
 namespace Perception.Engine
@@ -14,6 +15,42 @@ namespace Perception.Engine
     public class LogicData : LevelEntity
     {
         public List<LogicDataEntry> DataEntries = new List<LogicDataEntry>();
+
+
+        //OnChanged called when set value is called
+        public Action<LogicData> OnChanged;
+
+        //Set a value in the data entries
+        public void SetValue(string key, object value)
+        {
+            OnChanged?.Invoke(this);
+            foreach (var entry in DataEntries)
+            {
+                if (entry.Key == key)
+                {
+                    if (entry.Type == LogicDataEntryType.String)
+                    {
+                        entry.StringValue = (string)value;
+                    }
+                    else if (entry.Type == LogicDataEntryType.Int)
+                    {
+                        entry.IntValue = (int)value;
+                    }
+                    else if (entry.Type == LogicDataEntryType.Float)
+                    {
+                        entry.FloatValue = (float)value;
+                    }
+                    else if (entry.Type == LogicDataEntryType.Bool)
+                    {
+                        entry.BoolValue = (bool)value;
+                    }
+                    else if (entry.Type == LogicDataEntryType.Vector3)
+                    {
+                        entry.Vector3Value = (Vector3)value;
+                    }
+                }
+            }
+        }
     }
 
     [System.Serializable]
