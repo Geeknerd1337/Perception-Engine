@@ -6,6 +6,10 @@ namespace Perception.Engine
 {
     public class Player : Actor
     {
-
+        public override void Start()
+        {
+            base.Start();
+            gameObject.AddComponent<FirstpersonTripod>();
+        }
     }
 }

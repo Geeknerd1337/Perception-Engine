@@ -138,6 +138,11 @@ namespace Perception.Engine
 
         private Tripod FindActiveCamera()
         {
+            if (GameManager.Pawn != null)
+            {
+                return GameManager.Pawn.GetComponent<Tripod>();
+            }
+
             //Otherwise, return null
             return null;
         }
