@@ -156,7 +156,15 @@ namespace Perception.Engine
             }
             else
             {
-                return (T)resource;
+                if (typeof(T) != typeof(GameObject) && resource is GameObject)
+                {
+                    return (T)(resource as GameObject).GetComponent<T>();
+                }
+                else
+                {
+                    return (T)resource;
+                }
+
             }
         }
     }

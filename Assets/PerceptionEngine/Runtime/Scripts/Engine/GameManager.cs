@@ -114,14 +114,14 @@ namespace Perception.Engine
                 int index = Random.Range(0, playerStart.Length);
 
                 //Spawn the player
-                Pawn = AssetService.GetResource<Entity>("Player");
+                Pawn = Instantiate(AssetService.GetResource<Entity>("Player"));
                 Pawn.transform.position = playerStart[index].transform.position;
                 Pawn.transform.rotation = playerStart[index].transform.rotation;
             }
             else
             {
                 //Otherwise just spawn the player at the origin
-                Pawn = AssetService.GetResource<Entity>("Player");
+                Pawn = Instantiate(AssetService.GetResource<Entity>("Player"));
                 Pawn.transform.position = Vector3.zero;
                 Pawn.transform.rotation = Quaternion.identity;
             }
