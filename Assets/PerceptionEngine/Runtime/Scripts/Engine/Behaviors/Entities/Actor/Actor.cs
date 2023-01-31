@@ -15,7 +15,7 @@ namespace Perception.Engine
         /// <summary>
         /// Does this need to be here?
         /// </summary>
-        public virtual void BuilInput()
+        public virtual void BuildInput()
         {
 
         }

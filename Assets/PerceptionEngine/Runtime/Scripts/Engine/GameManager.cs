@@ -99,6 +99,32 @@ namespace Perception.Engine
 
         public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            if (Pawn == null)
+            {
+                SpawnPlayer();
+            }
+        }
+
+        public void SpawnPlayer()
+        {
+            InfoPlayerStart[] playerStart = FindObjectsOfType<InfoPlayerStart>();
+            if (playerStart.Length > 0)
+            {
+                //Pick a random player start
+                int index = Random.Range(0, playerStart.Length);
+
+                //Spawn the player
+                Pawn = AssetService.GetResource<Entity>("Player");
+                Pawn.transform.position = playerStart[index].transform.position;
+                Pawn.transform.rotation = playerStart[index].transform.rotation;
+            }
+            else
+            {
+                //Otherwise just spawn the player at the origin
+                Pawn = AssetService.GetResource<Entity>("Player");
+                Pawn.transform.position = Vector3.zero;
+                Pawn.transform.rotation = Quaternion.identity;
+            }
 
         }
     }
