@@ -5,6 +5,12 @@ using UnityEngine;
 
 namespace Perception.Engine
 {
+    /// <summary>
+    /// LogicData is a node which essentially contains a dictionary of string object value pairs. It is used to store data you may want to use for various
+    /// pieces of level logic. 
+    /// 
+    /// TODO: This should probably be a property on every entity, but I felt the separation was cleaner from an LD standpoint.
+    /// </summary>
     public class LogicData : LevelEntity
     {
         public List<LogicDataEntry> DataEntries = new List<LogicDataEntry>();
