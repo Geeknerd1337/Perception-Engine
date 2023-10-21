@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,7 +22,9 @@ namespace Perception.Engine
         /// </summary>
         public static Entity Pawn { get; set; }
 
-        public void Awake()
+        public List<string> ServicesToLoad = new List<string>();
+
+        public virtual void Awake()
         {
             //Create a singleton instance of the game manager that persists throughout the entire game.
             //This is done so that the game manager can be accessed from anywhere in the game and it doesn't need to restart initialization every time.
@@ -51,7 +52,7 @@ namespace Perception.Engine
         }
 
 
-        public void InitializeServices()
+        public virtual void InitializeServices()
         {
             AddService<AssetService>();
             AddService<AudioService>();
@@ -60,7 +61,6 @@ namespace Perception.Engine
             AddService<SettingsService>();
             AddService<EventService>();
         }
-
 
         public void AddService<T>() where T : PerceptionService
         {
@@ -79,7 +79,6 @@ namespace Perception.Engine
             serviceObject.transform.SetParent(this.transform);
         }
 
-
         public static T GetService<T>() where T : PerceptionService
         {
 
@@ -97,7 +96,7 @@ namespace Perception.Engine
             return null;
         }
 
-        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        public virtual void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             if (Pawn == null)
             {
@@ -105,13 +104,13 @@ namespace Perception.Engine
             }
         }
 
-        public void SpawnPlayer()
+        public virtual void SpawnPlayer()
         {
             InfoPlayerStart[] playerStart = FindObjectsOfType<InfoPlayerStart>();
             if (playerStart.Length > 0)
             {
                 //Pick a random player start
-                int index = Random.Range(0, playerStart.Length);
+                int index = UnityEngine.Random.Range(0, playerStart.Length);
 
                 //Spawn the player
                 Pawn = Instantiate(AssetService.GetResource<Entity>("Player"));
