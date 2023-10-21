@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEditor;
 using Perception.Engine;
-using System.Reflection;
-using System.Linq;
 using System;
-
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Perception.Editor
@@ -23,7 +21,6 @@ namespace Perception.Editor
     {
         /// <summary>Serialized Object</summary>
         private SerializedObject _soTarget;
-
 
         public static PerceptionEditor Instance;
 
@@ -172,6 +169,10 @@ namespace Perception.Editor
 
         private bool FieldIsInBoxGroup(SerializedProperty field)
         {
+            if (field == null)
+            {
+                return false;
+            }
             if (field.serializedObject.targetObject.GetType().GetField(field.name) == null)
             {
                 return false;
@@ -184,6 +185,25 @@ namespace Perception.Editor
         {
             return Attribute.GetCustomAttribute(field.serializedObject.targetObject.GetType().GetField(field.name), typeof(T));
         }
+
+        private static T Load<T>(string path) where T : Object
+        {
+            var packageInfo = UnityEditor.PackageManager.PackageInfo.FindForAssembly(Assembly.GetExecutingAssembly());
+            var packagePath = $"{packageInfo.assetPath}/{path}".Replace('\\', '/');
+            var result = AssetDatabase.LoadAssetAtPath<T>(packagePath);
+            if (result)
+            {
+                return result;
+            }
+            Debug.LogError($"Failed to load [{typeof(T)}] from [{path}]");
+            return default;
+        }
+
+        private static T LoadFromEditorDefaultResources<T>(string path) where T : Object =>
+            Load<T>($"Editor Default Resources/{path}");
+
+        private static T LoadFromGizmos<T>(string path) where T : Object =>
+            Load<T>($"Gizmos/{path}");
 
 
 
@@ -431,3 +451,4 @@ namespace Perception.Editor
 
 
 }
+

@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
 namespace Perception.Engine
 {
@@ -37,8 +34,12 @@ namespace Perception.Engine
         public override void Start()
         {
             base.Start();
-            //Subsribe to the input's data changed event.
-            Input.OnChanged += InputChanged;
+
+            if (Input != null)
+            {
+                //Subsribe to the input's data changed event.
+                Input.OnChanged += InputChanged;
+            }
 
         }
 
