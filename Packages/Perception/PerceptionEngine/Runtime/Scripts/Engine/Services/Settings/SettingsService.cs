@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -55,7 +54,7 @@ namespace Perception.Engine
             SetSettings();
         }
 
-        public void SetSettings()
+        public virtual void SetSettings()
         {
             //Load the MainMixer audio mixer from the resource folder
             _mixer = Resources.Load<AudioMixer>("Perception/Audio/MainMixer");
@@ -75,7 +74,7 @@ namespace Perception.Engine
         }
 
 
-        public void Save(SettingsData data, string fileName)
+        public virtual void Save(SettingsData data, string fileName)
         {
             if (!Directory.Exists(SettingsPath))
             {
@@ -88,7 +87,7 @@ namespace Perception.Engine
             writer.Close();
         }
 
-        public void Load(string fileName)
+        public virtual void Load(string fileName)
         {
             //If the file doesn't exit, return 
             if (!File.Exists($"{SettingsPath}/{fileName}"))
