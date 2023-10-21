@@ -169,10 +169,12 @@ namespace Perception.Editor
 
         private bool FieldIsInBoxGroup(SerializedProperty field)
         {
-            if (field == null)
+            if (field == null || field.serializedObject.targetObject == null)
             {
                 return false;
             }
+
+
             if (field.serializedObject.targetObject.GetType().GetField(field.name) == null)
             {
                 return false;

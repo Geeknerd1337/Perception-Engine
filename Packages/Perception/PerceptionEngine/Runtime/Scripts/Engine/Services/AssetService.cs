@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -69,10 +68,12 @@ namespace Perception.Engine
                 //Create a new dictionary for this resource type
                 Library.Add(type, new Dictionary<string, Object>());
 
+
+                this.Log($"Loading {type.ToString()} Resources");
+
                 //Get all the resources of this type
                 Object[] resources = Resources.LoadAll(paths[type]);
 
-                this.Log($"Loading {type.ToString()} Resources");
 
                 //Iterate over the resources and add them to the dictionary
                 foreach (Object resource in resources)
