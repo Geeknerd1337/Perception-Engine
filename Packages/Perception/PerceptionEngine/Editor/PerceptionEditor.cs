@@ -47,10 +47,16 @@ namespace Perception.Editor
 
         private void OnEnable()
         {
+            if (targets[0] == null)
+            {
+                return;
+            }
             //Get te type
             Type t = target.GetType();
             //Extract the fields
             Fields = t.GetFields(BindingFlags.Instance | BindingFlags.Public);
+
+
 
             //Set the serializedo bject
             _soTarget = new SerializedObject(targets);
