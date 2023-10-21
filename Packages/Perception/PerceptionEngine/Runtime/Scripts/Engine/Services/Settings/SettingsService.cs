@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -27,18 +28,14 @@ namespace Perception.Engine
 
         private AudioMixer _mixer;
 
-
-
         public override void Awake()
         {
             base.Awake();
             _data = new SettingsData();
         }
 
-        public void Start()
+        public virtual void Start()
         {
-            //Attempt to load our settings initially
-
             Load(SettingsFileName);
             SetSettings();
         }
@@ -124,6 +121,7 @@ namespace Perception.Engine
         public float MusicVolume = 1f;
         public bool Subtitles = false;
 
+        public Dictionary<string, object> CustomSettings = new Dictionary<string, object>();
 
         public SettingsData DeepCopy()
         {
